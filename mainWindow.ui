@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>686</width>
+    <height>661</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>标签编辑器</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">* {
+	font-family:&quot;KaiTi&quot;;
+	font-size:28px;
+	color: #F8F8F2;
+}
+
+*::item:hover {
+    background-color: #474844;
+}
+*::item:selected {
+    background-color: #75715E;
+}
+/* 背景 */
+QWidget {
+    background-color: #202120;
+}
+/* list */
+QListWidget {
+	background-color: #272822;
+	border: none;
+}
+QListWidget::item {
+	padding: 5px;
+}
+/* table */
+QTableWidget {
+	background-color: #272822;
+	border: none;
+}
+QTableWidget::item {
+	margin:5px
+}
+/* table:表头 */
+QHeaderView::section {
+	background-color: #272822;
+}
+/* 按钮 */
+QPushButton {
+	background-color: #75715e;
+}
+QPushButton:hover {
+    background-color: #8d8871;
+}
+QPushButton:selected {
+    background-color: #8d8871;
+}
+/* 多页Tab */
+QTabBar::tab {
+	background-color: #34352f;
+	margin-right:1px;
+	margin-left:1px;
+	width:150px;
+}
+QTabBar::tab:selected {
+	background-color: #272822;
+}
+QTabWidget::pane{
+	border:none;
+}
+/* 状态条 */
+QStatusBar {
+	background-color: #414339;
+}
+/* 菜单栏 */
+QMenuBar, QMenu {
+	font-family:&quot;SimHei&quot;;
+	font-size:25px;
+	color: #F8F8F2;
+}
+QMenuBar::item:disabled, QMenu::item:disabled {
+    color: #4c4d4b;
+}
+/* 滑动条 */
+QScrollBar:disabled {
+    background: #272822;
+}
+QScrollBar:vertical {
+    width: 8px;
+}
+QScrollBar:horizontal {
+    height: 8px;
+}
+QScrollBar::handle { 
+    padding: 0;
+    margin: 2px;
+    border-radius: 2px;
+    border: 2px solid palette(midlight);
+    background: palette(midlight);
+}
+QScrollBar::handle:vertical {
+    min-height: 20px;
+    min-width: 0px;
+}
+QScrollBar::handle:horizontal {
+    min-width: 20px;
+    min-height: 0px;
+}
+QScrollBar::handle:hover {
+    border-color: palette(light);
+    background: palette(light);
+}
+QScrollBar::handle:pressed {
+    background: palette(highlight);
+    border-color: palette(highlight);
+}
+QScrollBar::add-line , QScrollBar::sub-line {
+    height: 0px;
+    border: 0px;
+}
+QScrollBar::up-arrow, QScrollBar::down-arrow {
+    border: 0px;
+    width: 0px;
+    height: 0px;
+}
+QScrollBar::add-page, QScrollBar::sub-page {
+    background: none;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,4,2">
+      <item>
+       <widget class="QListWidget" name="imageList"/>
+      </item>
+      <item>
+       <widget class="QTableWidget" name="tagTable">
+        <property name="editTriggers">
+         <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+        </property>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="horizontalHeaderMinimumSectionSize">
+         <number>100</number>
+        </attribute>
+        <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderHighlightSections">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>英文标签</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>中文标签</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="copyList"/>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>686</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="File">
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::DefaultContextMenu</enum>
+    </property>
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>保存模式</string>
+     </property>
+     <addaction name="keepOrder"/>
+     <addaction name="sortOrder"/>
+    </widget>
+    <addaction name="openFile"/>
+    <addaction name="saveFile"/>
+    <addaction name="menu"/>
+    <addaction name="saveConfirm"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>过滤器</string>
+    </property>
+    <addaction name="openFilter"/>
+    <addaction name="clearFilter"/>
+   </widget>
+   <addaction name="File"/>
+   <addaction name="menu_2"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="openFile">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>打开文件夹</string>
+   </property>
+  </action>
+  <action name="saveFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="keepOrder">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>保持原始顺序</string>
+   </property>
+  </action>
+  <action name="sortOrder">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>按照字母排序</string>
+   </property>
+  </action>
+  <action name="saveConfirm">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>切换图片保存确认</string>
+   </property>
+  </action>
+  <action name="tagBlacklist">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>黑名单</string>
+   </property>
+  </action>
+  <action name="imageBlacklist">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>黑名单</string>
+   </property>
+  </action>
+  <action name="tagWhitelist">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>白名单</string>
+   </property>
+  </action>
+  <action name="imageWhitelist">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>白名单</string>
+   </property>
+  </action>
+  <action name="openFilter">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>打开过滤器</string>
+   </property>
+  </action>
+  <action name="imageFilter">
+   <property name="text">
+    <string>图片过滤</string>
+   </property>
+  </action>
+  <action name="clearFilter">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>清空过滤器</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
