@@ -16,6 +16,7 @@ Easy to edit DanBooru tags for **single** images.
 
 ### Step1:
 Installing pyqt5
+
 ``
 pip install pyqt5
 ``
