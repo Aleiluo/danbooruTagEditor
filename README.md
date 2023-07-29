@@ -10,7 +10,7 @@ Easy to edit DanBooru tags for **single** images.
 - Undo Redo
 - Whether to sort when saving
 
-![](./imgs/display.pngdisplay.png)
+![](./imgs/display.png)
 
 ## Installation and startup
 

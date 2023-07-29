@@ -8,7 +8,7 @@
 - 撤销重做
 - 保存时是否排序
 
-![](./imgs/display.pngdisplay.png)
+![](./imgs/display.png)
 
 ## 安装与启动
 
