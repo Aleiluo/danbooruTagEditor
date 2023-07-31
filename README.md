@@ -78,7 +78,8 @@ can filter both tags and images
 MainWindowshortcuts are centered on interactive_events.
 Filter shortcuts are centered on tagfilter.
 
-##TODO
+## TODO
+
 Add workflow to make adding tags more convenient. In the edit mode, multiple categories can be defined, and tags can be conveniently added in the work mode after the definition is completed. for example:
 - Viewpoint (first page)
    - front
