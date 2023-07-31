@@ -4,3 +4,5 @@ otherutil
 filtercache
 filterWindow_ui.py
 mainWindow_ui.py
+workingflowWindow_ui.py
+test.py

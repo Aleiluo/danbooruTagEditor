@@ -1,4 +1,5 @@
 import os
+import re
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -23,9 +24,9 @@ class fileManager:
         # 对照原标签，如果一致则不必设为需要保存
         old_tags = self.loadTagsfromFile(self.curTag_path)
         cur_tags = self.getTagsfromTable()
-        
+
         need2save = False
-        
+
         if len(old_tags) != len(cur_tags):
             need2save = True
         else:
@@ -33,12 +34,11 @@ class fileManager:
                 if old_tags[i].strip() != cur_tags[i].strip():
                     need2save = True
                     break
-        
+
         if need2save == False:
             self.sethaveSaved()
             return
-            
-        
+
         self.entagChanged = True
         title = self.windowTitle()
         if not title.endswith(" *"):
@@ -58,8 +58,11 @@ class fileManager:
             msg_box.setText(msg)
             msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             # 设置为不可关闭
-            msg_box.setWindowFlags(msg_box.windowFlags() | Qt.CustomizeWindowHint | Qt.WindowTitleHint)
-            msg_box.setWindowFlags(msg_box.windowFlags() & ~Qt.WindowCloseButtonHint)
+            msg_box.setWindowFlags(msg_box.windowFlags()
+                                   | Qt.CustomizeWindowHint
+                                   | Qt.WindowTitleHint)
+            msg_box.setWindowFlags(msg_box.windowFlags()
+                                   & ~Qt.WindowCloseButtonHint)
 
             reply = msg_box.exec_()
 
@@ -75,7 +78,8 @@ class fileManager:
             msg_box = QMessageBox(self)
             msg_box.setWindowTitle(title)
             msg_box.setText(msg)
-            msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+            msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No
+                                       | QMessageBox.Cancel)
 
             reply = msg_box.exec_()
 
@@ -98,15 +102,15 @@ class fileManager:
     # 文件的保存与读取
     #
     # -------------------
-    
+
     def loadTagsfromFile(self, tags_file):
         self.curTag_path = os.path.join(self.folder_path, tags_file)
         with open(self.curTag_path, "r") as file:
             tags = file.read().split(",")
-        
+
         tags = [tag.strip() for tag in tags]
         return tags
-    
+
     def getTagsfromTable(self):
         row_count = self.ui.tagTable.rowCount()
         tags_index = []
@@ -121,9 +125,9 @@ class fileManager:
         if self.ui.keepOrder.isChecked():
             # 按照行号排序
             tags_index = sorted(tags_index, key=lambda x: x[0])
-        
+
         return [tag_index[1] for tag_index in tags_index]
-    
+
     def saveTags2File(self):
         tags = self.getTagsfromTable()
         # 保存标签到文件
@@ -135,26 +139,41 @@ class fileManager:
         # 成功保存，标记取消
         self.ui.statusbar.showMessage("标签文件已更新！", 700)
         self.sethaveSaved()
-        
+
     def loadImagesfromFile(self):
         ## 从文件载入图片列表
-        
+        def extract_number_from_filename(filename):
+            # 尝试获取图片的序号
+            match = re.search(r'\((\d+)\)', filename)
+            if match:
+                return int(match.group(1))
+            return 0
+
         # 清空图片列表和标签列表
         self.ui.imageList.clear()
         # 清空表格
         self.ui.tagTable.clearContents()
         self.ui.tagTable.setRowCount(0)
         # 获取文件夹内的图片和标签文件
-        for file in os.listdir(self.folder_path):
-            if file.endswith(".jpg") or file.endswith(".png"):
-                item = QListWidgetItem(file)
-                self.ui.imageList.addItem(item)
+        image_files = [
+            file for file in os.listdir(self.folder_path)
+            if file.endswith(".jpg") or file.endswith(".png")
+        ]
+        # 先按照英文字母排序，再按照括号内的数字大小排序
+        image_files_sorted = sorted(image_files, 
+                                    key=lambda x: (x.split('(')[0], 
+                                                   extract_number_from_filename(x))
+                                    )
+
+        for file in image_files_sorted:
+            item = QListWidgetItem(file)
+            self.ui.imageList.addItem(item)
 
         # 添加后选中列表中第一个元素
         if self.ui.imageList.count() > 0:
             self.ui.imageList.setFocus()
             self.ui.imageList.setCurrentRow(0)
-            
+
     def loadTags2Table(self):
         # 阻塞事件
         self.blockItemchangedConnect = True
@@ -163,9 +182,10 @@ class fileManager:
         self.ui.tagTable.clearContents()
         self.ui.tagTable.setRowCount(0)
         # 获取当前图片对应的标签文件
-        tags_file = self.curImage.replace(".jpg", ".txt").replace(".png", ".txt")
+        tags_file = self.curImage.replace(".jpg",
+                                          ".txt").replace(".png", ".txt")
         tags = self.loadTagsfromFile(tags_file)
-        
+
         ## 将标签添加到表格
         self.tagcount = len(tags)
         # 添加标签
@@ -187,11 +207,10 @@ class fileManager:
 
         # 恢复事件
         self.blockItemchangedConnect = False
-        
 
     def selectFolder(self):
         # 选择文件夹一定会弹窗询问
-        if self.SaveConfirm_3opt(title='保存确认',msg='确认保存？') == False:
+        if self.SaveConfirm_3opt(title='保存确认', msg='确认保存？') == False:
             return
 
         # 打开文件夹选择对话框
@@ -215,11 +234,3 @@ class fileManager:
             self.ui.clearFilter.setEnabled(True)
             # 应用过滤器
             self.applyFilter2mainWindow(filterimage=True)
-
-
-    
-            
-
-
-
-

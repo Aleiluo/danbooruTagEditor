@@ -77,3 +77,28 @@ can filter both tags and images
 ### Shortcut rewriting
 MainWindowshortcuts are centered on interactive_events.
 Filter shortcuts are centered on tagfilter.
+
+##TODO
+Add workflow to make adding tags more convenient. In the edit mode, multiple categories can be defined, and tags can be conveniently added in the work mode after the definition is completed. for example:
+- Viewpoint (first page)
+   - front
+   - side
+   - back
+- Action (second page)
+   - lie
+   - stand
+   - squat
+- Head (third page)
+   - Hair clips
+   - hair accessories
+   - Double tail
+- Upper body (4th page)
+   - skirt
+   - T-shirts
+- other parts...
+
+The design of this function mainly considers the following reasons:
+- On the basis of marking by tagger, the number of wrong or need to add tags for each part of the human body is small.
+- When users add tags, they often have their own tag documents. This function can reduce the need for users to switch back and forth between tag documents and tagger.
+
+![](imgs/todo_workingflow.png)

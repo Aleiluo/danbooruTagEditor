@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+
 def textRepeatRows(self, text):
     # 获取匹配的行列表
     repeat_rows = []
@@ -38,12 +39,13 @@ def refreshTagtable(self, item, old_text=''):
             # 排序
             self.ui.tagTable.sortItems(0, Qt.AscendingOrder)
             # 排序后移动视野到item_text的位置
-            
-            found_items = self.ui.tagTable.findItems(item_text, Qt.MatchExactly)
+
+            found_items = self.ui.tagTable.findItems(item_text,
+                                                     Qt.MatchExactly)
             if len(found_items) > 0:
                 found_item = found_items[0]
                 self.ui.tagTable.setCurrentCell(found_item.row(), 0)
-                
+
             return True
 
     elif item_column == 1:
@@ -61,6 +63,7 @@ def refreshTagtable(self, item, old_text=''):
             return True
         else:
             return False
+
 
 class userEvents():
     def __init__(self):
@@ -80,22 +83,22 @@ class userEvents():
         self.cur_items: Any
         self.cur_item: Any
         self.cur_text: str
-        
+
         # -------------------
         #
         # 热键与事件Shortcuts & Events
         #
         # -------------------
-
+        
         # Shift + V：将剪切板内容添加到标签列表
         QShortcut(QKeySequence(Qt.ShiftModifier + Qt.Key_V),self) \
             .activated.connect(lambda: self.addRow(self.clipboard.text().strip()))
         # Ctrl + Z：撤销
         QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_Z),self) \
-            .activated.connect(self.tagtableUndo)
+            .activated.connect(self.undoStack.undo)
         # Ctrl + Y：重做
         QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_Y),self) \
-            .activated.connect(self.tagtableRedo)
+            .activated.connect(self.undoStack.redo)
         # Ctrl + N：添加一个新的空行
         QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_N),self) \
             .activated.connect(self.addRow)
@@ -118,10 +121,10 @@ class userEvents():
         # Alt + Down：选择下一张图片
         QShortcut(QKeySequence(Qt.AltModifier + Qt.Key_Down),self) \
             .activated.connect(self.nextImage)
-        # Del 
+        # Del
         QShortcut(QKeySequence(Qt.Key_Delete),self) \
             .activated.connect(lambda: self.delTagtableRow(self.cur_items))
-            
+
         # 连接图片列表的选择事件
         self.ui.imageList.itemSelectionChanged.connect(self.selectImage)
         # 标签列表：物件更改事件--带阻拦的编辑模式
@@ -131,7 +134,7 @@ class userEvents():
         # 拷贝列表左键单击事件
         self.ui.copyList.itemClicked.connect(self.copy2Tagtable)
         # **拷贝列表右击删除功能的定义在全局事件过滤器中**
-            
+
     # 全局事件过滤器
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Wheel:
@@ -193,7 +196,6 @@ class userEvents():
         elif event.key() == Qt.Key_Escape and self.ui.tagTable.hasFocus():
             self.ui.imageList.setFocus()
 
-                
     def keyReleaseEvent(self, event):
         if event.key() == Qt.Key_Alt:
             # 释放Alt解锁滑动条
@@ -237,9 +239,10 @@ class userEvents():
                 if not table.isRowHidden(row):
                     table.setCurrentCell(row, 0)
                     break
+
         # 确定保存
         if self.ui.saveConfirm.isChecked():
-            if self.SaveConfirm_3opt(title='保存确认',msg='确认保存？') == False:
+            if self.SaveConfirm_3opt(title='保存确认', msg='确认保存？') == False:
                 return
         else:
             self.saveTags2File()
@@ -289,7 +292,7 @@ class userEvents():
             if not self.ui.imageList.item(new_row).isHidden():
                 break
         self.ui.imageList.setCurrentRow(new_row)
-        
+
     def switch_image_preview(self):
 
         # 切换图片显示或者隐藏
@@ -319,11 +322,11 @@ class userEvents():
                 # 添加透明效果
                 self.opacity_effect = QGraphicsOpacityEffect()
                 if self.mouseinLeftRegion == True:
-                     # 如果鼠标在屏幕左侧三分之一处，图像初始是透明的
-                    self.opacity_effect.setOpacity(0.3) 
+                    # 如果鼠标在屏幕左侧三分之一处，图像初始是透明的
+                    self.opacity_effect.setOpacity(0.3)
                 else:
                     self.opacity_effect.setOpacity(1)
-                
+
                 self.preview_image.setGraphicsEffect(self.opacity_effect)
 
                 # 创建动画对象来实现透明度的过渡效果
@@ -350,6 +353,7 @@ class userEvents():
     def delayed_getCurtext(self):
         # 设置50毫秒的延迟避免频繁读取
         QTimer.singleShot(50, self.getCurtext)
+
     def getCurtext(self):
         self.cur_items = self.ui.tagTable.selectedItems()
         if len(self.cur_items) > 0:
@@ -359,9 +363,9 @@ class userEvents():
                 print(self.cur_item.index)
             except:
                 pass
-        
+
     def editmode(self):
-        
+
         # 技术有限，用间接方法来处理编辑模式
         if self.blockItemchangedConnect == True:
             return
@@ -397,7 +401,9 @@ class userEvents():
     def addRow(self, text=''):
         if not self.ui.tagTable.hasFocus():
             return
-        
+
+        ## 对于所有的添加操作，都应该先验证有没有重复元素再添加
+        ## 而不是添加后再验证再判断是否要删除
         repeat_rows = textRepeatRows(self, text)
         if len(repeat_rows) == 0:
             self.blockItemchangedConnect = True
@@ -409,7 +415,7 @@ class userEvents():
             item.index = self.tagcount
             self.ui.tagTable.setItem(0, 0, item)
             self.ui.tagTable.setCurrentCell(0, 0)
-            
+
             refreshTagtable(self, item)
             # 设置为需要保存
             self.setneedSave()
@@ -419,16 +425,15 @@ class userEvents():
             self.undoStack.push(command)
             # 添加到快捷拷贝列表
             self.addCopylist(text)
-            
+
             self.blockItemchangedConnect = False
         else:
             self.ui.tagTable.setCurrentCell(repeat_rows[0], 0)
-    
-        
+
     def delTagtableRow(self, items):
         if not self.ui.tagTable.hasFocus():
             return
-        
+
         if self.ui.tagTable.hasFocus():
             # 阻塞事件
             self.blockItemchangedConnect = True
@@ -439,11 +444,13 @@ class userEvents():
                 selected_rows.add(item.row())
             # 删除操作的行要逆序排序
             selected_rows = sorted(selected_rows, reverse=True)
-            
+
             rowsInfo = []
             for row in selected_rows:
-                rowsInfo.append([self.ui.tagTable.item(row, 0).index, 
-                                self.ui.tagTable.item(row, 0).text()])
+                rowsInfo.append([
+                    self.ui.tagTable.item(row, 0).index,
+                    self.ui.tagTable.item(row, 0).text()
+                ])
             # 反着删除
             for row in selected_rows:
                 self.ui.tagTable.removeRow(row)
@@ -456,14 +463,6 @@ class userEvents():
 
             # 恢复事件
             self.blockItemchangedConnect = False
-            
-    def tagtableUndo(self):
-        self.undoStack.undo()
-        self.setneedSave()
-
-    def tagtableRedo(self):
-        self.undoStack.redo()
-        self.setneedSave()
 
     # -------------------
     #
@@ -540,7 +539,6 @@ class AddRowCommand(QUndoCommand):
         item = QTableWidgetItem(self.text)
         item.index = self.ind
         self.main.ui.tagTable.setItem(0, 0, item)
-        self.main.ui.tagTable.setCurrentCell(0, 0)
 
         refreshTagtable(self.main, item)
         self.main.blockItemchangedConnect = False
@@ -548,10 +546,11 @@ class AddRowCommand(QUndoCommand):
     def undo(self):
         # 删除行
         self.main.blockItemchangedConnect = True
-        found_items = self.main.ui.tagTable.findItems(self.text, Qt.MatchExactly)
+        found_items = self.main.ui.tagTable.findItems(self.text,
+                                                      Qt.MatchExactly)
         if len(found_items) > 0:
-                found_item = found_items[0]
-                self.main.ui.tagTable.removeRow(found_item.row())
+            found_item = found_items[0]
+            self.main.ui.tagTable.removeRow(found_item.row())
         self.main.blockItemchangedConnect = False
 
 
@@ -562,6 +561,18 @@ class DeleteRowsCommand(QUndoCommand):
         self.main = main_self
         self.RowInfo = RowInfo
 
+    def redo(self):
+        self.main.blockItemchangedConnect = True
+        # 为了避免莫名奇妙的bug，查找进行删除
+        for info in self.RowInfo:
+            found_items = self.main.ui.tagTable.findItems(
+                info[1], Qt.MatchExactly)
+            if len(found_items) > 0:
+                found_item = found_items[0]
+                self.main.ui.tagTable.removeRow(found_item.row())
+
+        self.main.blockItemchangedConnect = False
+
     def undo(self):
         self.main.blockItemchangedConnect = True
         # 直接在末尾添加一个，刷新一次，时间复杂度拉满
@@ -570,19 +581,8 @@ class DeleteRowsCommand(QUndoCommand):
             item = QTableWidgetItem(info[1])
             item.index = info[0]
             self.main.ui.tagTable.setItem(0, 0, item)
-            self.main.ui.tagTable.setCurrentCell(0, 0)
 
             refreshTagtable(self.main, item)
-            
+
         self.main.blockItemchangedConnect = False
 
-    def redo(self):
-        self.main.blockItemchangedConnect = True
-        # 为了避免莫名奇妙的bug，查找进行删除
-        for info in self.RowInfo:
-            found_items = self.main.ui.tagTable.findItems(info[1], Qt.MatchExactly)
-            if len(found_items) > 0:
-                found_item = found_items[0]
-                self.main.ui.tagTable.removeRow(found_item.row())
-            
-        self.main.blockItemchangedConnect = False

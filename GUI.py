@@ -10,13 +10,14 @@ from file_manager import fileManager
 from tag_tran import tagTran
 from tagfilter import Filters
 
+# TODO: 新增工作流文件
+
 class LoadMainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         # 载入窗口
         self.ui = Ui_mainWindow()
         self.ui.setupUi(self)
-
 
 class EditorGUI(tagTran, fileManager, userEvents, Filters,
                 LoadMainWindow):

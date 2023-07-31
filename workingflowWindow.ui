@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>603</width>
+    <height>555</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>75</width>
+    <height>36</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">* {
+	font-family:&quot;KaiTi&quot;;
+	font-size:28px;
+	color: #F8F8F2;
+}
+
+*::item:hover {
+    background-color: #474844;
+}
+*::item:selected {
+    background-color: #75715E;
+}
+/* 背景 */
+QWidget {
+    background-color: #202120;
+}
+/* list */
+QListWidget {
+	background-color: #272822;
+	border: none;
+}
+QListWidget::item {
+	padding: 5px;
+}
+/* table */
+QTableWidget {
+	background-color: #272822;
+	border: none;
+}
+QTableWidget::item {
+	margin:5px
+}
+/* table:表头 */
+QHeaderView::section {
+	background-color: #272822;
+}
+/* 按钮 */
+QPushButton {
+	background-color: #75715e;
+}
+QPushButton:hover {
+    background-color: #8d8871;
+}
+QPushButton:selected {
+    background-color: #8d8871;
+}
+/* 多页Tab */
+QTabBar::tab {
+	background-color: #34352f;
+	margin-right:1px;
+	margin-left:1px;
+	width:150px;
+}
+QTabBar::tab:selected {
+	background-color: #272822;
+}
+QTabWidget::pane{
+	border:none;
+}
+/* 状态条 */
+QStatusBar {
+	background-color: #414339;
+}
+/* 菜单栏 */
+QMenuBar, QMenu {
+	font-family:&quot;SimHei&quot;;
+	font-size:25px;
+	color: #F8F8F2;
+}
+QMenuBar::item:disabled, QMenu::item:disabled {
+    color: #4c4d4b;
+}
+/* 滑动条 */
+QScrollBar:disabled {
+    background: #272822;
+}
+QScrollBar:vertical {
+    width: 8px;
+}
+QScrollBar:horizontal {
+    height: 8px;
+}
+QScrollBar::handle { 
+    padding: 0;
+    margin: 2px;
+    border-radius: 2px;
+    border: 2px solid palette(midlight);
+    background: palette(midlight);
+}
+QScrollBar::handle:vertical {
+    min-height: 20px;
+    min-width: 0px;
+}
+QScrollBar::handle:horizontal {
+    min-width: 20px;
+    min-height: 0px;
+}
+QScrollBar::handle:hover {
+    border-color: palette(light);
+    background: palette(light);
+}
+QScrollBar::handle:pressed {
+    background: palette(highlight);
+    border-color: palette(highlight);
+}
+QScrollBar::add-line , QScrollBar::sub-line {
+    height: 0px;
+    border: 0px;
+}
+QScrollBar::up-arrow, QScrollBar::down-arrow {
+    border: 0px;
+    width: 0px;
+    height: 0px;
+}
+QScrollBar::add-page, QScrollBar::sub-page {
+    background: none;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPushButton" name="wf_editmode">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: #34352f;
+	font-family:&quot;SimHei&quot;;
+	font-size:25px;
+	color: #F8F8F2;
+	width: 150px;
+	height:40px;
+}
+QPushButton:hover {
+    background-color: #34352f;
+}
+QPushButton:selected {
+    background-color: #34352f;
+}
+QPushButton:checked {
+    background-color: #272822;
+}</string>
+       </property>
+       <property name="text">
+        <string>编辑模式</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="wf_workmode">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: #34352f;
+	font-family:&quot;SimHei&quot;;
+	font-size:25px;
+	color: #F8F8F2;
+	width: 150px;
+	height:40px;
+}
+QPushButton:hover {
+    background-color: #34352f;
+}
+QPushButton:selected {
+    background-color: #34352f;
+}
+QPushButton:checked {
+    background-color: #272822;
+}</string>
+       </property>
+       <property name="text">
+        <string>工作模式</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="wf_insEdit"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QTableWidget" name="wf_table">
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>英文标签</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>中文标签</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="wf_add">
+         <property name="text">
+          <string>添加</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="wf_del">
+         <property name="text">
+          <string>删除</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="wf_firstpage">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>首页</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="wf_prepage">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>←</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="wf_pageEdit">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>1/10</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="wf_nextpage">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>→</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="wf_endpage">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>75</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>尾页</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

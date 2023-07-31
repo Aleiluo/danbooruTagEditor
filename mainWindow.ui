@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>686</width>
+    <width>733</width>
     <height>661</height>
    </rect>
   </property>
@@ -186,7 +186,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>686</width>
+     <width>733</width>
      <height>31</height>
     </rect>
    </property>
