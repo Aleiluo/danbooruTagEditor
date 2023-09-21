@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>733</width>
-    <height>661</height>
+    <width>886</width>
+    <height>677</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,7 +44,7 @@ QTableWidget {
 	border: none;
 }
 QTableWidget::item {
-	margin:5px
+	
 }
 /* table:表头 */
 QHeaderView::section {
@@ -137,7 +137,51 @@ QScrollBar::add-page, QScrollBar::sub-page {
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,4,2">
       <item>
-       <widget class="QListWidget" name="imageList"/>
+       <widget class="QTableWidget" name="imageTable">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderMinimumSectionSize">
+         <number>50</number>
+        </attribute>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>150</number>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderMinimumSectionSize">
+         <number>150</number>
+        </attribute>
+        <attribute name="verticalHeaderDefaultSectionSize">
+         <number>150</number>
+        </attribute>
+        <attribute name="verticalHeaderHighlightSections">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>缩略图</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>名称</string>
+         </property>
+        </column>
+       </widget>
       </item>
       <item>
        <widget class="QTableWidget" name="tagTable">
@@ -148,7 +192,10 @@ QScrollBar::add-page, QScrollBar::sub-page {
          <bool>true</bool>
         </attribute>
         <attribute name="horizontalHeaderMinimumSectionSize">
-         <number>100</number>
+         <number>10</number>
+        </attribute>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>10</number>
         </attribute>
         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
          <bool>true</bool>
@@ -186,7 +233,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>733</width>
+     <width>886</width>
      <height>31</height>
     </rect>
    </property>
@@ -200,27 +247,35 @@ QScrollBar::add-page, QScrollBar::sub-page {
     <property name="title">
      <string>文件</string>
     </property>
-    <widget class="QMenu" name="menu">
+    <addaction name="openFile"/>
+    <addaction name="saveFile"/>
+   </widget>
+   <widget class="QMenu" name="Utils">
+    <property name="title">
+     <string>工具</string>
+    </property>
+    <addaction name="openFilter"/>
+    <addaction name="openWorkingFlow"/>
+    <addaction name="batchOperation"/>
+   </widget>
+   <widget class="QMenu" name="Settings">
+    <property name="title">
+     <string>设置</string>
+    </property>
+    <widget class="QMenu" name="savemode">
      <property name="title">
       <string>保存模式</string>
      </property>
-     <addaction name="keepOrder"/>
-     <addaction name="sortOrder"/>
+     <addaction name="oriorder_front"/>
+     <addaction name="oriorder_behind"/>
+     <addaction name="sortorder"/>
     </widget>
-    <addaction name="openFile"/>
-    <addaction name="saveFile"/>
-    <addaction name="menu"/>
+    <addaction name="savemode"/>
     <addaction name="saveConfirm"/>
    </widget>
-   <widget class="QMenu" name="menu_2">
-    <property name="title">
-     <string>过滤器</string>
-    </property>
-    <addaction name="openFilter"/>
-    <addaction name="clearFilter"/>
-   </widget>
    <addaction name="File"/>
-   <addaction name="menu_2"/>
+   <addaction name="Utils"/>
+   <addaction name="Settings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="openFile">
@@ -258,7 +313,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
     <string>按照字母排序</string>
    </property>
   </action>
-  <action name="saveConfirm">
+  <action name="action_2">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -306,7 +361,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>打开过滤器</string>
+    <string>过滤器    Ctrl+F</string>
    </property>
   </action>
   <action name="imageFilter">
@@ -320,6 +375,68 @@ QScrollBar::add-page, QScrollBar::sub-page {
    </property>
    <property name="text">
     <string>清空过滤器</string>
+   </property>
+  </action>
+  <action name="openWorkingFlow">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>工作流    Ctrl+W</string>
+   </property>
+  </action>
+  <action name="saveConfirm">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>询问是否保存</string>
+   </property>
+  </action>
+  <action name="showImg">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>显示缩略图</string>
+   </property>
+  </action>
+  <action name="oriorder_front">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>原始顺序(前插)</string>
+   </property>
+  </action>
+  <action name="oriorder_behind">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>原始顺序(后插)</string>
+   </property>
+  </action>
+  <action name="sortorder">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>按照字母排序</string>
+   </property>
+  </action>
+  <action name="batchOperation">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>批量增删  Ctrl+B</string>
    </property>
   </action>
  </widget>

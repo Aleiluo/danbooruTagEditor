@@ -1,8 +1,10 @@
 __pycache__
 .vscode
+.idea
 otherutil
-filtercache
-filterWindow_ui.py
-mainWindow_ui.py
-workingflowWindow_ui.py
+cache
+FilterWindow_ui.py
+MainWindow_ui.py
+WorkingFlowWindow_ui.py
+BatchOperatorWindow_ui.py
 test.py

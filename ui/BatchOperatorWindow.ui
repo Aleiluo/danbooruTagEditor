@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BatchOperator</class>
+ <widget class="QWidget" name="BatchOperator">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>485</width>
+    <height>172</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>批量增删</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">* {
+	font-family:&quot;KaiTi&quot;;
+	font-size:28px;
+	color: #F8F8F2;
+}
+
+*::item:hover {
+    background-color: #474844;
+}
+*::item:selected {
+    background-color: #75715E;
+}
+/* 背景 */
+QWidget {
+    background-color: #202120;
+}
+/* list */
+QListWidget {
+	background-color: #272822;
+	border: none;
+}
+QListWidget::item {
+	padding: 5px;
+}
+/* table */
+QTableWidget {
+	background-color: #272822;
+	border: none;
+}
+/* 编辑栏 */
+QLineEdit {
+	border: 1px solid #99947c; /* 边框宽度为1px，颜色为#A0A0A0 */
+	background-color: #414339; /* 背景颜色 */
+	color: #cccccc; /* 文本颜色 */
+	selection-background-color: #646765; /* 选中文本的背景颜色 */
+	selection-color: #cccccc; /* 选中文本的颜色 */
+
+}
+QTableWidget::item {
+	
+}
+/* table:表头 */
+QHeaderView::section {
+	background-color: #272822;
+}
+/* 按钮 */
+QPushButton {
+	background-color: #75715e;
+}
+QPushButton:hover {
+    background-color: #8d8871;
+}
+QPushButton:selected {
+    background-color: #8d8871;
+}
+/* 多页Tab */
+QTabBar::tab {
+	background-color: #34352f;
+	margin-right:1px;
+	margin-left:1px;
+	width:150px;
+}
+QTabBar::tab:selected {
+	background-color: #272822;
+}
+QTabWidget::pane{
+	border:none;
+}
+/* 状态条 */
+QStatusBar {
+	background-color: #414339;
+}
+/* 菜单栏 */
+QMenuBar, QMenu {
+	font-family:&quot;SimHei&quot;;
+	font-size:25px;
+	color: #F8F8F2;
+}
+QMenuBar::item:disabled, QMenu::item:disabled {
+    color: #4c4d4b;
+}
+/* 滑动条 */
+QScrollBar:disabled {
+    background: #272822;
+}
+QScrollBar:vertical {
+    width: 8px;
+}
+QScrollBar:horizontal {
+    height: 8px;
+}
+QScrollBar::handle { 
+    padding: 0;
+    margin: 2px;
+    border-radius: 2px;
+    border: 2px solid palette(midlight);
+    background: palette(midlight);
+}
+QScrollBar::handle:vertical {
+    min-height: 20px;
+    min-width: 0px;
+}
+QScrollBar::handle:horizontal {
+    min-width: 20px;
+    min-height: 0px;
+}
+QScrollBar::handle:hover {
+    border-color: palette(light);
+    background: palette(light);
+}
+QScrollBar::handle:pressed {
+    background: palette(highlight);
+    border-color: palette(highlight);
+}
+QScrollBar::add-line , QScrollBar::sub-line {
+    height: 0px;
+    border: 0px;
+}
+QScrollBar::up-arrow, QScrollBar::down-arrow {
+    border: 0px;
+    width: 0px;
+    height: 0px;
+}
+QScrollBar::add-page, QScrollBar::sub-page {
+    background: none;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="ins_Label">
+     <property name="text">
+      <string>对过滤后的图像进行批量增删操作</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="frontMode">
+       <property name="text">
+        <string>前插</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="behindMode">
+       <property name="text">
+        <string>后插</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="batchEdit">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>100</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="batchAdd">
+       <property name="text">
+        <string>添加</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="batchDel">
+       <property name="text">
+        <string>删除</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>100</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
+</ui>

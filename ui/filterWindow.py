@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'filterWindow.ui'
+# Form implementation generated from reading ui file 'FilterWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Filter(object):
     def setupUi(self, Filter):
         Filter.setObjectName("Filter")
-        Filter.resize(575, 636)
+        Filter.resize(575, 584)
         Filter.setStyleSheet("* {\n"
 "    font-family:\"KaiTi\";\n"
 "    font-size:28px;\n"
@@ -43,9 +43,6 @@ class Ui_Filter(object):
 "QTableWidget {\n"
 "    background-color: #272822;\n"
 "    border: none;\n"
-"}\n"
-"QTableWidget::item {\n"
-"    margin:5px\n"
 "}\n"
 "/* table:表头 */\n"
 "QHeaderView::section {\n"

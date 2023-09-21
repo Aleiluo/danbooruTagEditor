@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>575</width>
-    <height>636</height>
+    <height>584</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,9 +42,6 @@ QListWidget::item {
 QTableWidget {
 	background-color: #272822;
 	border: none;
-}
-QTableWidget::item {
-	margin:5px
 }
 /* table:表头 */
 QHeaderView::section {

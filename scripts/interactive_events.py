@@ -1,5 +1,4 @@
 import os
-from typing import Any
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -15,6 +14,7 @@ def textRepeatRows(self, text):
             repeat_rows.append(row)
 
     return repeat_rows
+
 
 def refreshTagtable(self, item, old_text=''):
     # 该函数不设撤销重做操作
@@ -57,19 +57,21 @@ def refreshTagtable(self, item, old_text=''):
             en_text = en_item.text().strip()
             cn_text = cn_item.text().strip()
             # 更新字典
-            self.translateDict[en_text] = cn_text
+            self.update_translation(en_text, cn_text)
             # 将翻译结果保存
-            self.saveTranslate()
+            self.write_translation_file()
             return True
         else:
             return False
 
 
-class userEvents():
+class userEvents:
     def __init__(self):
         super().__init__()
-        # 创建撤销栈
-        self.undoStack = QUndoStack(self)
+        # 加载剪贴板
+        self.clipboard = QApplication.clipboard()
+        # 图片表格选中的行
+        self.imageTableRow = 0
         # 当前选中图片
         self.curImage = None
         # 预览图是否正在显示
@@ -80,53 +82,59 @@ class userEvents():
         self.left_region = QRegion(0, 0, self.width() * 0.333, self.height())
         self.mouseinLeftRegion = False
         # 单击时记录tag信息方便撤销操作
-        self.cur_items: Any
-        self.cur_item: Any
-        self.cur_text: str
+        self.cur_items = None
+        self.cur_item = None
+        self.cur_text = None
+        # 记录鼠标是否离开窗口
+        self.main_left = False
+        self.wf_left = False
 
         # -------------------
         #
         # 热键与事件Shortcuts & Events
         #
         # -------------------
-        
+
         # Shift + V：将剪切板内容添加到标签列表
-        QShortcut(QKeySequence(Qt.ShiftModifier + Qt.Key_V),self) \
+        QShortcut(QKeySequence(Qt.ShiftModifier + Qt.Key_V), self) \
             .activated.connect(lambda: self.addRow(self.clipboard.text().strip()))
         # Ctrl + Z：撤销
-        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_Z),self) \
-            .activated.connect(self.undoStack.undo)
+        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_Z), self) \
+            .activated.connect(self.tagtableUndo)
         # Ctrl + Y：重做
-        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_Y),self) \
-            .activated.connect(self.undoStack.redo)
+        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_Y), self) \
+            .activated.connect(self.tagtableRedo)
         # Ctrl + N：添加一个新的空行
-        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_N),self) \
+        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_N), self) \
             .activated.connect(self.addRow)
         # Ctrl + V：将剪切板内容覆盖选中内容
-        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_V),self) \
-            .activated.connect(lambda: self.overrideText(
-                self.cur_item, self.clipboard.text().strip(), self.cur_text))
+        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_V), self) \
+            .activated.connect(
+            lambda: self.overrideText(self.cur_item, self.clipboard.text().strip(), self.cur_text))
         # Ctrl + S：保存
-        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_S),self) \
+        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_S), self) \
             .activated.connect(self.saveTags2File)
-        # Ctrl + G：打开过滤器
-        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_G),self) \
+        # Ctrl + F：打开过滤器
+        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_F), self) \
             .activated.connect(self.open_Filter)
+        # Ctrl + W：打开工作流
+        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_W), self) \
+            .activated.connect(self.open_WorkingFlow)
         # Alt + S：打开预览图
-        QShortcut(QKeySequence(Qt.AltModifier + Qt.Key_S),self) \
+        QShortcut(QKeySequence(Qt.AltModifier + Qt.Key_S), self) \
             .activated.connect(self.switch_image_preview)
         # Alt + Up：选择上一张图片
-        QShortcut(QKeySequence(Qt.AltModifier + Qt.Key_Up),self) \
+        QShortcut(QKeySequence(Qt.AltModifier + Qt.Key_Up), self) \
             .activated.connect(self.prevImage)
         # Alt + Down：选择下一张图片
-        QShortcut(QKeySequence(Qt.AltModifier + Qt.Key_Down),self) \
+        QShortcut(QKeySequence(Qt.AltModifier + Qt.Key_Down), self) \
             .activated.connect(self.nextImage)
         # Del
-        QShortcut(QKeySequence(Qt.Key_Delete),self) \
+        QShortcut(QKeySequence(Qt.Key_Delete), self) \
             .activated.connect(lambda: self.delTagtableRow(self.cur_items))
 
         # 连接图片列表的选择事件
-        self.ui.imageList.itemSelectionChanged.connect(self.selectImage)
+        self.ui.imageTable.itemSelectionChanged.connect(self.selectImage)
         # 标签列表：物件更改事件--带阻拦的编辑模式
         self.ui.tagTable.itemChanged.connect(self.editmode)
         # 标签列表：激活物件事件--获取当前物件文本
@@ -135,8 +143,17 @@ class userEvents():
         self.ui.copyList.itemClicked.connect(self.copy2Tagtable)
         # **拷贝列表右击删除功能的定义在全局事件过滤器中**
 
-    # 全局事件过滤器
-    def eventFilter(self, obj, event):
+    def tagtableUndo(self):
+        self.undoStack.undo()
+        self.wf_FontReset()
+
+    def tagtableRedo(self):
+        self.undoStack.redo()
+        self.wf_FontReset()
+
+    def eventFilter(self, source, event):
+        # print(source)
+        # 全局事件过滤器
         if event.type() == QEvent.Wheel:
             # Alt
             if event.modifiers() & Qt.AltModifier:
@@ -158,7 +175,7 @@ class userEvents():
             # 在mainWindow中右键对应的事件是QEvent.ContextMenu
             self.delCopylistRow()
             return True
-        elif event.type() == QMouseEvent.HoverMove:
+        elif event.type() == QMouseEvent.HoverMove and source == self:
             # 判断鼠标是否在左侧区域内
             if self.imageShowed == True:
                 if self.left_region.contains(event.pos()) == True:
@@ -179,6 +196,12 @@ class userEvents():
                     self.preview_image.setAttribute(
                         Qt.WA_TransparentForMouseEvents, False)
                     return True
+        elif event.type() == QEvent.Leave:
+            if source == self:
+                self.wf_setOnTop(False)
+        elif event.type() == QEvent.Enter:
+            if source == self:
+                self.wf_setOnTop(True)
 
         return False
 
@@ -186,15 +209,16 @@ class userEvents():
         # 该函数对焦点对象的热键进行覆写操作
         # Enter
         if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
-            if self.ui.imageList.hasFocus():
-                # 如果焦点在imageList
+            if self.ui.imageTable.hasFocus():
+                # 如果焦点在imageTable
                 self.ui.tagTable.setFocus()
             elif self.ui.tagTable.hasFocus():
-                # 如果焦点在tagTable按下Enter进入编辑模式
+                # 如果焦点在tagTable按下Enter添加一个空行
                 self.ui.tagTable.editItem(self.ui.tagTable.currentItem())
+                # self.addRow()
         # Esc
         elif event.key() == Qt.Key_Escape and self.ui.tagTable.hasFocus():
-            self.ui.imageList.setFocus()
+            self.ui.imageTable.setFocus()
 
     def keyReleaseEvent(self, event):
         if event.key() == Qt.Key_Alt:
@@ -203,6 +227,8 @@ class userEvents():
                 scrollArea.setEnabled(True)
 
     def resizeEvent(self, event):
+        # 调整表头
+        self.setEqualColumnWidth()
         # 窗口大小改变时更新左侧区域
         self.left_region = QRegion(0, 0, self.width() * 0.333, self.height())
         if self.imageShowed == True:
@@ -218,6 +244,7 @@ class userEvents():
                 self.saveTags2File()  # 保存操作
                 self.close()  # 关闭窗口
                 self.filter_window.close()
+                self.workingflow_window.close()
             elif reply == QMessageBox.No:
                 self.close()  # 关闭窗口
                 self.filter_window.close()
@@ -226,10 +253,11 @@ class userEvents():
         else:
             self.close()
             self.filter_window.close()
+            self.workingflow_window.close()
 
     # -------------------
     #
-    # 图片列表imageList
+    # 图片表格imageTable
     #
     # -------------------
 
@@ -247,10 +275,11 @@ class userEvents():
         else:
             self.saveTags2File()
 
-        selected_items = self.ui.imageList.selectedItems()
+        selected_items = self.ui.imageTable.selectedItems()
         if len(selected_items) > 0:
-            selected_item = selected_items[0]
-            self.curImage = selected_item.text()
+            self.imageTableRow = selected_items[0].row()
+            text_item = self.ui.imageTable.item(self.imageTableRow, 1)
+            self.curImage = text_item.text()
             self.loadTags2Table()
             # 如果预览图正在显示，那么切换预览图为当前图片
             if self.imageShowed == True:
@@ -259,39 +288,37 @@ class userEvents():
             # 清空撤销栈
             self.undoStack.clear()
             # 应用过滤器到主窗口(选择图片不进行图片过滤操作)
-            self.applyFilter2mainWindow(filterimage=False)
+            self.filter_apply(filterimage=False)
             # 选择第一个没有隐藏的内容
             if self.ui.tagTable.rowCount() > 0:
                 select_first_visible_row(self.ui.tagTable)
 
     def prevImage(self):
-        total_rows = self.ui.imageList.count()
+        total_rows = self.ui.imageTable.rowCount()
         if total_rows == 0:
             return
 
-        current_row = self.ui.imageList.currentRow()
-        new_row = current_row
-
+        new_row = self.imageTableRow
         # 向前遍历图片列表，找到下一个未隐藏的图片项
         while True:
             new_row = (new_row - 1) % total_rows
-            if not self.ui.imageList.item(new_row).isHidden():
+            if not self.ui.imageTable.isRowHidden(new_row):
                 break
 
         # 设置当前选择为新的行
-        self.ui.imageList.setCurrentRow(new_row)
+        self.ui.imageTable.setCurrentCell(new_row, 0)
 
     def nextImage(self):
-        total_rows = self.ui.imageList.count()
+        total_rows = self.ui.imageTable.rowCount()
         if total_rows == 0:
             return
-        current_row = self.ui.imageList.currentRow()
-        new_row = current_row
+
+        new_row = self.imageTableRow
         while True:
             new_row = (new_row + 1) % total_rows
-            if not self.ui.imageList.item(new_row).isHidden():
+            if not self.ui.imageTable.isRowHidden(new_row):
                 break
-        self.ui.imageList.setCurrentRow(new_row)
+        self.ui.imageTable.setCurrentCell(new_row, 0)
 
     def switch_image_preview(self):
 
@@ -365,7 +392,6 @@ class userEvents():
                 pass
 
     def editmode(self):
-
         # 技术有限，用间接方法来处理编辑模式
         if self.blockItemchangedConnect == True:
             return
@@ -398,25 +424,32 @@ class userEvents():
         # 恢复事件
         self.blockItemchangedConnect = False
 
-    def addRow(self, text=''):
-        if not self.ui.tagTable.hasFocus():
-            return
+    def addRow(self, text='<NewRow>'):
+        def getTagCount(self):
+            if self.ui.oriorder_front.isChecked():
+                # 前插模式
+                return self.front_const
+            elif self.ui.oriorder_behind.isChecked():
+                # 后插模式
+                return self.behind_const
+            elif self.ui.sortorder.isChecked():
+                # 排序模式与标签无关
+                return self.sort_count
 
-        ## 对于所有的添加操作，都应该先验证有没有重复元素再添加
-        ## 而不是添加后再验证再判断是否要删除
+        # 先验证有没有重复，再添加
         repeat_rows = textRepeatRows(self, text)
         if len(repeat_rows) == 0:
             self.blockItemchangedConnect = True
             # 添加一行
             self.ui.tagTable.clearSelection()  # 取消所有选中
             self.ui.tagTable.insertRow(0)
+            # 插入的一行有文本
             item = QTableWidgetItem(text)
-            self.tagcount += 1
-            item.index = self.tagcount
+            item.index = getTagCount(self)
             self.ui.tagTable.setItem(0, 0, item)
             self.ui.tagTable.setCurrentCell(0, 0)
-
             refreshTagtable(self, item)
+
             # 设置为需要保存
             self.setneedSave()
             # 创建撤销命令
@@ -431,38 +464,57 @@ class userEvents():
             self.ui.tagTable.setCurrentCell(repeat_rows[0], 0)
 
     def delTagtableRow(self, items):
-        if not self.ui.tagTable.hasFocus():
-            return
+        # 阻塞事件
+        self.blockItemchangedConnect = True
+        # 获取行索引列表
+        selected_rows = set()
+        for item in items:
+            selected_rows.add(item.row())
+        # 删除操作的行要逆序排序
+        selected_rows = sorted(selected_rows, reverse=True)
 
-        if self.ui.tagTable.hasFocus():
-            # 阻塞事件
-            self.blockItemchangedConnect = True
+        rowsInfo = []
+        for row in selected_rows:
+            rowsInfo.append([
+                self.ui.tagTable.item(row, 0).index,
+                self.ui.tagTable.item(row, 0).text()
+            ])
+        # 反着删除
+        for row in selected_rows:
+            self.ui.tagTable.removeRow(row)
+        # 设置为需要保存
+        self.setneedSave()
+        # 创建撤销命令
+        command = DeleteRowsCommand(self, rowsInfo)
+        # 添加撤销命令到撤销栈
+        self.undoStack.push(command)
 
-            # 获取行索引列表
-            selected_rows = set()
-            for item in items:
-                selected_rows.add(item.row())
-            # 删除操作的行要逆序排序
-            selected_rows = sorted(selected_rows, reverse=True)
+        # 恢复事件
+        self.blockItemchangedConnect = False
 
-            rowsInfo = []
-            for row in selected_rows:
-                rowsInfo.append([
-                    self.ui.tagTable.item(row, 0).index,
-                    self.ui.tagTable.item(row, 0).text()
-                ])
-            # 反着删除
-            for row in selected_rows:
-                self.ui.tagTable.removeRow(row)
-            # 设置为需要保存
-            self.setneedSave()
-            # 创建撤销命令
-            command = DeleteRowsCommand(self, rowsInfo)
-            # 添加撤销命令到撤销栈
-            self.undoStack.push(command)
+        # 删除后更新工作表
+        self.wf_FontReset()
 
-            # 恢复事件
-            self.blockItemchangedConnect = False
+    def changeTagTableIndex(self, sort_mode):
+        def change_index(self, new_index):
+            for row in range(self.ui.tagTable.rowCount()):
+                item = self.ui.tagTable.item(row, 0)
+                idx = item.index
+                if (idx == self.front_const or
+                        idx == self.behind_const or
+                        idx == self.sort_const):
+                    item.index = new_index
+
+        # 遍历表格，更改item的index
+        if sort_mode == 0:
+            # 前插
+            change_index(self, self.front_const)
+        elif sort_mode == 1:
+            # 后插
+            change_index(self, self.behind_const)
+        elif sort_mode == 2:
+            # 排序
+            change_index(self, self.sort_const)
 
     # -------------------
     #
@@ -473,12 +525,12 @@ class userEvents():
     def copy2Tagtable(self):
         # 将copyList选中的文本拷贝到tagTable
         selected_items = self.ui.copyList.selectedItems()
-        self.addTag(selected_items[0].text().strip())
+        self.addRow(selected_items[0].text().strip())
 
     def addCopylist(self, text):
         # 不添加空格
         text = text.strip()
-        if text == '':
+        if text == '' or text == '<NewRow>':
             return
         # 检查文本是否已经存在于 copyList 中
         for i in range(self.ui.copyList.count()):
@@ -585,4 +637,3 @@ class DeleteRowsCommand(QUndoCommand):
             refreshTagtable(self.main, item)
 
         self.main.blockItemchangedConnect = False
-

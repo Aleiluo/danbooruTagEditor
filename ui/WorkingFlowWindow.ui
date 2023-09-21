@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>WorkingFlow</class>
+ <widget class="QWidget" name="WorkingFlow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>603</width>
-    <height>555</height>
+    <width>517</width>
+    <height>556</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>工作流</string>
   </property>
   <property name="styleSheet">
    <string notr="true">* {
@@ -32,6 +32,7 @@
 *::item:selected {
     background-color: #75715E;
 }
+
 /* 背景 */
 QWidget {
     background-color: #202120;
@@ -49,9 +50,6 @@ QTableWidget {
 	background-color: #272822;
 	border: none;
 }
-QTableWidget::item {
-	margin:5px
-}
 /* table:表头 */
 QHeaderView::section {
 	background-color: #272822;
@@ -66,6 +64,22 @@ QPushButton:hover {
 QPushButton:selected {
     background-color: #8d8871;
 }
+/* 编辑栏 */
+QLineEdit {
+	border: 1px solid #99947c; /* 边框宽度为1px，颜色为#A0A0A0 */
+	background-color: #414339; /* 背景颜色 */
+	color: #cccccc; /* 文本颜色 */
+	selection-background-color: #646765; /* 选中文本的背景颜色 */
+	selection-color: #cccccc; /* 选中文本的颜色 */
+
+}
+
+QLineEdit:disabled { /* QLineEdit在禁用时的状态 */
+	border: 1px solid #202120;
+	background-color: #202120;
+	color: #F8F8F2;
+}
+
 /* 多页Tab */
 QTabBar::tab {
 	background-color: #34352f;
@@ -165,6 +179,15 @@ QPushButton:checked {
        <property name="text">
         <string>编辑模式</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -191,6 +214,12 @@ QPushButton:checked {
        <property name="text">
         <string>工作模式</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -209,7 +238,23 @@ QPushButton:checked {
     </layout>
    </item>
    <item>
-    <widget class="QLineEdit" name="wf_insEdit"/>
+    <widget class="QLineEdit" name="wf_insEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+     <property name="text">
+      <string>&lt;分组名称&gt;</string>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -240,35 +285,7 @@ QPushButton:checked {
       </widget>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QPushButton" name="wf_add">
-         <property name="text">
-          <string>添加</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="wf_del">
-         <property name="text">
-          <string>删除</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+      <layout class="QVBoxLayout" name="verticalLayout"/>
      </item>
     </layout>
    </item>
@@ -288,7 +305,7 @@ QPushButton:checked {
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="wf_firstpage">
+      <widget class="QPushButton" name="wf_homepage">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -329,7 +346,10 @@ QPushButton:checked {
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="wf_pageEdit">
+      <widget class="QLineEdit" name="wf_pageShow">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -343,7 +363,7 @@ QPushButton:checked {
         </size>
        </property>
        <property name="text">
-        <string>1/10</string>
+        <string>1/1</string>
        </property>
       </widget>
      </item>
@@ -367,7 +387,7 @@ QPushButton:checked {
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="wf_endpage">
+      <widget class="QPushButton" name="wf_lastpage">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -404,4 +424,7 @@ QPushButton:checked {
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>
