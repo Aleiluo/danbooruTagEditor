@@ -1,14 +1,14 @@
 import os
 import re
 
-from time import time
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
 class fileManager:
+    image_loaded = pyqtSignal(int, QPixmap)
+
     def __init__(self):
         super().__init__()
         self.tagcount = 0
@@ -17,8 +17,10 @@ class fileManager:
         self.curTag_path = ""
         self.folder_path = ""
         # 多线程加载图片
-        self.image_loader = imageTableLoader()
-        self.image_loader.image_loaded.connect(self.setImageTable)
+        self.thread_pool = QThreadPool()
+        # 开多了加载时会卡顿
+        self.thread_pool.setMaxThreadCount(10)
+        self.image_loaded.connect(self.setImageTable)
 
     # -------------------
     #
@@ -97,12 +99,11 @@ class fileManager:
     #
     # -------------------
 
-    def setImageTable(self, emit_info):
-        for row, pixmap in emit_info:
-            pixmap_label = QLabel()
-            pixmap_label.setPixmap(pixmap)
-            pixmap_label.setAlignment(Qt.AlignCenter)
-            self.ui.imageTable.setCellWidget(row, 0, pixmap_label)
+    def setImageTable(self, row, pixmap):
+        pixmap_label = QLabel()
+        pixmap_label.setPixmap(pixmap)
+        pixmap_label.setAlignment(Qt.AlignCenter)
+        self.ui.imageTable.setCellWidget(row, 0, pixmap_label)
 
     def loadImagesfromFile(self):
         def extract_number_from_filename(filename):
@@ -126,20 +127,22 @@ class fileManager:
                                                    extract_number_from_filename(x))
                                     )
 
+        # 载入图像
         for row, file_name in enumerate(image_files_sorted):
             self.ui.imageTable.insertRow(row)
             file_name_item = QTableWidgetItem(file_name)
-            # 设置单元格文本居中对齐
+            # 文字居中
             file_name_item.setTextAlignment(Qt.AlignCenter)
             # 自动换行
-            file_name_item.setFlags(file_name_item.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.TextWordWrap)
+            file_name_item.setFlags(file_name_item.flags() |
+                                    Qt.ItemIsSelectable |
+                                    Qt.ItemIsEnabled |
+                                    Qt.TextWordWrap)
             self.ui.imageTable.setItem(row, 1, file_name_item)
-
-        # 载入对应图像
-        self.image_loader.stop()
-        self.image_loader.wait()
-        self.image_loader.setParams(self.folder_path, image_files_sorted)
-        self.image_loader.start()
+            # 创建并运行工作线程
+            image_path = os.path.join(self.folder_path, file_name)
+            worker = ImageLoaderThread(row, image_path, self.image_loaded)
+            self.thread_pool.start(worker)
 
     # 标签表格
     def loadTagsfromFile(self, tags_file):
@@ -265,49 +268,17 @@ class fileManager:
             self.ui.openWorkingFlow.setEnabled(True)
 
 
-class imageTableLoader(QThread):
-    image_loaded = pyqtSignal(list)
-    stop_thread = pyqtSignal()
-
-    def __init__(self):
+class ImageLoaderThread(QRunnable):
+    def __init__(self, row, image_path, return_signal):
         super().__init__()
-        self.batchSize = 30
-        self.folder_path = ''
-        self.file_names = []
-        self.stop_flag = False
-
-    def setParams(self, folder_path, file_names):
-        self.folder_path = folder_path
-        self.file_names = file_names
-        self.stop_flag = False
-
-    def stop(self):
-        self.stop_flag = True
+        self.row = row
+        self.image_path = image_path
+        self.return_signal = return_signal
 
     def run(self):
-        emit_image_info = []
-        t1 = time()
-        # 图片加载
-        for i, file_name in enumerate(self.file_names):
-            if self.stop_flag:
-                return
-
-            image_path = os.path.join(self.folder_path, file_name)
-            # 读取并缩放图像
-            image_reader = QImageReader(image_path)
-            image_reader.setAutoTransform(True)
-            image = image_reader.read()
-            image = image.scaled(160, 160, Qt.KeepAspectRatio)
-            emit_image_info.append((i, QPixmap.fromImage(image)))
-
-            if (i + 1) % self.batchSize == 0:
-                t2 = time()
-                print(t2 - t1)
-                t1 = time()
-                self.image_loaded.emit(emit_image_info)
-                emit_image_info = []
-
-        # 最后也要返回一次
-        self.image_loaded.emit(emit_image_info)
-
+        image_reader = QImageReader(self.image_path)
+        image_reader.setAutoTransform(True)
+        image = image_reader.read().scaled(160, 160, Qt.KeepAspectRatio)
+        pixmap = QPixmap.fromImage(image)
+        self.return_signal.emit(self.row, pixmap)
 

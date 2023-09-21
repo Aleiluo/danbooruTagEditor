@@ -202,6 +202,7 @@ class workingFlow:
         return tag_list
 
     def wf_loadTag(self, page):
+        self.wf_blockConnect = True
         # 写入对应页的工作流标签，并且标注出标签列表已有的标签
         tag_list = self.wf_spaceinfo[page]
         rowPosition = self.workingflow_window.ui.wf_table.rowCount()
@@ -215,6 +216,7 @@ class workingFlow:
             self.workingflow_window.ui.wf_table.setItem(rowPosition, 0, en_item)
             self.workingflow_window.ui.wf_table.setItem(rowPosition, 1, cn_item)
             rowPosition += 1
+        self.wf_blockConnect = False
 
     def wf_FontReset(self):
         if not self.workingflow_window.isVisible():
