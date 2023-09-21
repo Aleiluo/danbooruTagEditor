@@ -11,7 +11,9 @@
 - 多线程载入图片
 - 缓存用过的标签
 
-![](./imgs/display.png)
+![](./imgs/display1.png)
+
+![](./imgs/display2.png)
 
 ## 安装与启动
 
