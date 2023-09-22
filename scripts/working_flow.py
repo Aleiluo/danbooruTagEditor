@@ -17,10 +17,6 @@ class workingFlow:
         self.workingflow_window = QWidget()
         self.workingflow_window.ui = Ui_WorkingFlow()
         self.workingflow_window.ui.setupUi(self.workingflow_window)
-        # # 设置自定义委托给wf_table
-        # self.workingflow_window.ui.wf_table.setItemDelegate(
-        #     CustomItemDelegate(self.workingflow_window.ui.wf_table))
-
         # 添加热键
         # Ctrl + N：添加行
         QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_N), self.workingflow_window) \
@@ -34,6 +30,7 @@ class workingFlow:
         # Right：下一页
         QShortcut(QKeySequence(Qt.Key_Right), self.workingflow_window) \
             .activated.connect(lambda: self.wf_SwitchPage(self.wf_cur_page + 1))
+
 
         # 与主窗口相连接的快捷键
 
@@ -55,11 +52,6 @@ class workingFlow:
         # Alt + Down：选择下一张图片
         QShortcut(QKeySequence(Qt.AltModifier + Qt.Key_Down), self.workingflow_window) \
             .activated.connect(self.nextImage)
-        # Enter：复制内容
-        QShortcut(QKeySequence(Qt.Key_Enter), self.workingflow_window) \
-            .activated.connect(self.wf_EnterPressed)
-        QShortcut(QKeySequence(Qt.Key_Return), self.workingflow_window) \
-            .activated.connect(self.wf_EnterPressed)
 
         # 工作流：复制内容
         self.workingflow_window.ui.wf_table.cellPressed.connect(self.wf_copy2tagTable)
@@ -75,6 +67,12 @@ class workingFlow:
         # 工作流：尾页
         self.workingflow_window.ui.wf_lastpage.clicked.connect(
             lambda: self.wf_SwitchPage(len(self.wf_spaceinfo) - 1))
+        # 工作流：插入页
+        self.workingflow_window.ui.wf_insertpage.clicked.connect(
+            lambda: self.wf_insertNewPage(self.wf_cur_page + 1))
+        # 工作流：删除当前页
+        self.workingflow_window.ui.wf_delpage.clicked.connect(
+            lambda: self.wf_delCurrentPage(self.wf_cur_page))
         # 工作流：工作模式切换
         self.workingflow_window.ui.buttonGroup.buttonToggled.connect(self.wf_workingModeChanged)
         # 更改工作流表格信息
@@ -382,6 +380,22 @@ class workingFlow:
         # 切换页码后进行聚焦操作
         self.workingflow_window.ui.wf_table.setFocus()
 
+    def wf_insertNewPage(self, page):
+        # 新建页操作
+        self.wf_spaceinfo.insert(page, [])
+        self.wf_spacename.insert(page, '')
+        self.wf_SwitchPage(page)
+
+    def wf_delCurrentPage(self, page):
+        # 删除页操作(删除当前页转到上一页)
+        if 0 <= page < len(self.wf_spaceinfo):
+            del self.wf_spaceinfo[page]
+            del self.wf_spacename[page]
+            self.wf_cur_page = self.wf_cur_page - 1
+            self.wf_SwitchPage(page - 1)
+
+
+
     def wf_EnterPressed(self):
         if self.workingflow_window.ui.wf_workmode.isChecked():
             # 工作模式
@@ -418,6 +432,7 @@ class workingFlow:
             self.wf_blockDeleteRow = False
             # 重载当前页刷新上色状态
             self.wf_FontReset()
+
         else:
             # 工作模式：不允许更改，点击复制，一次仅能选择一行
             self.wf_workingMode = 'working'
@@ -432,6 +447,7 @@ class workingFlow:
             self.wf_blockDeleteRow = True
             # 重载当前页刷新上色状态
             self.wf_FontReset()
+
         # 工作模式保存
         self.wf_saveFile()
         # 切换模式后聚焦操作

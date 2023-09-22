@@ -152,7 +152,6 @@ class userEvents:
         self.wf_FontReset()
 
     def eventFilter(self, source, event):
-        # print(source)
         # 全局事件过滤器
         if event.type() == QEvent.Wheel:
             # Alt
@@ -171,6 +170,22 @@ class userEvents:
                 elif delta < 0:
                     self.nextImage()
                     return True
+        elif event.type() == QEvent.KeyPress:
+            if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+                if source == self:
+                    if self.ui.imageTable.hasFocus():
+                        # 如果焦点在imageTable
+                        self.ui.tagTable.setFocus()
+                    elif self.ui.tagTable.hasFocus():
+                        self.ui.tagTable.editItem(self.ui.tagTable.currentItem())
+
+                elif source == self.workingflow_window:
+                    self.wf_EnterPressed()
+
+            elif event.key() == Qt.Key_Escape and self.ui.tagTable.hasFocus():
+                if source == self:
+                    self.ui.imageTable.setFocus()
+
         elif event.type() == QEvent.ContextMenu:
             # 在mainWindow中右键对应的事件是QEvent.ContextMenu
             self.delCopylistRow()
@@ -204,21 +219,6 @@ class userEvents:
                 self.wf_setOnTop(True)
 
         return False
-
-    def keyPressEvent(self, event):
-        # 该函数对焦点对象的热键进行覆写操作
-        # Enter
-        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
-            if self.ui.imageTable.hasFocus():
-                # 如果焦点在imageTable
-                self.ui.tagTable.setFocus()
-            elif self.ui.tagTable.hasFocus():
-                # 如果焦点在tagTable按下Enter添加一个空行
-                self.ui.tagTable.editItem(self.ui.tagTable.currentItem())
-                # self.addRow()
-        # Esc
-        elif event.key() == Qt.Key_Escape and self.ui.tagTable.hasFocus():
-            self.ui.imageTable.setFocus()
 
     def keyReleaseEvent(self, event):
         if event.key() == Qt.Key_Alt:

@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_WorkingFlow(object):
     def setupUi(self, WorkingFlow):
         WorkingFlow.setObjectName("WorkingFlow")
-        WorkingFlow.resize(517, 556)
+        WorkingFlow.resize(545, 556)
         WorkingFlow.setMinimumSize(QtCore.QSize(75, 36))
         WorkingFlow.setStyleSheet("* {\n"
 "    font-family:\"KaiTi\";\n"
@@ -49,6 +49,11 @@ class Ui_WorkingFlow(object):
 "/* table:表头 */\n"
 "QHeaderView::section {\n"
 "    background-color: #272822;\n"
+"}\n"
+"/* tooltip:提示 */\n"
+"QToolTip {\n"
+"    color: #546E7A;\n"
+"    fonte: 18px \"SimHei\";\n"
 "}\n"
 "/* 按钮 */\n"
 "QPushButton {\n"
@@ -228,16 +233,21 @@ class Ui_WorkingFlow(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.wf_delpage = QtWidgets.QPushButton(WorkingFlow)
+        self.wf_delpage.setMinimumSize(QtCore.QSize(36, 36))
+        self.wf_delpage.setMaximumSize(QtCore.QSize(36, 36))
+        self.wf_delpage.setObjectName("wf_delpage")
+        self.horizontalLayout.addWidget(self.wf_delpage)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem1)
         self.wf_homepage = QtWidgets.QPushButton(WorkingFlow)
-        self.wf_homepage.setMinimumSize(QtCore.QSize(75, 36))
-        self.wf_homepage.setMaximumSize(QtCore.QSize(75, 36))
+        self.wf_homepage.setMinimumSize(QtCore.QSize(65, 36))
+        self.wf_homepage.setMaximumSize(QtCore.QSize(65, 36))
         self.wf_homepage.setObjectName("wf_homepage")
         self.horizontalLayout.addWidget(self.wf_homepage)
         self.wf_prepage = QtWidgets.QPushButton(WorkingFlow)
-        self.wf_prepage.setMinimumSize(QtCore.QSize(75, 36))
-        self.wf_prepage.setMaximumSize(QtCore.QSize(75, 36))
+        self.wf_prepage.setMinimumSize(QtCore.QSize(65, 36))
+        self.wf_prepage.setMaximumSize(QtCore.QSize(65, 36))
         self.wf_prepage.setAutoDefault(False)
         self.wf_prepage.setObjectName("wf_prepage")
         self.horizontalLayout.addWidget(self.wf_prepage)
@@ -248,17 +258,22 @@ class Ui_WorkingFlow(object):
         self.wf_pageShow.setObjectName("wf_pageShow")
         self.horizontalLayout.addWidget(self.wf_pageShow)
         self.wf_nextpage = QtWidgets.QPushButton(WorkingFlow)
-        self.wf_nextpage.setMinimumSize(QtCore.QSize(75, 36))
-        self.wf_nextpage.setMaximumSize(QtCore.QSize(75, 36))
+        self.wf_nextpage.setMinimumSize(QtCore.QSize(65, 36))
+        self.wf_nextpage.setMaximumSize(QtCore.QSize(65, 36))
         self.wf_nextpage.setObjectName("wf_nextpage")
         self.horizontalLayout.addWidget(self.wf_nextpage)
         self.wf_lastpage = QtWidgets.QPushButton(WorkingFlow)
-        self.wf_lastpage.setMinimumSize(QtCore.QSize(75, 36))
-        self.wf_lastpage.setMaximumSize(QtCore.QSize(75, 36))
+        self.wf_lastpage.setMinimumSize(QtCore.QSize(65, 36))
+        self.wf_lastpage.setMaximumSize(QtCore.QSize(65, 36))
         self.wf_lastpage.setObjectName("wf_lastpage")
         self.horizontalLayout.addWidget(self.wf_lastpage)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem2)
+        self.wf_insertpage = QtWidgets.QPushButton(WorkingFlow)
+        self.wf_insertpage.setMinimumSize(QtCore.QSize(36, 36))
+        self.wf_insertpage.setMaximumSize(QtCore.QSize(36, 36))
+        self.wf_insertpage.setObjectName("wf_insertpage")
+        self.horizontalLayout.addWidget(self.wf_insertpage)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
 
         self.retranslateUi(WorkingFlow)
@@ -274,8 +289,13 @@ class Ui_WorkingFlow(object):
         item.setText(_translate("WorkingFlow", "英文标签"))
         item = self.wf_table.horizontalHeaderItem(1)
         item.setText(_translate("WorkingFlow", "中文标签"))
+        self.wf_delpage.setToolTip(_translate("WorkingFlow", "删除当前页"))
+        self.wf_delpage.setText(_translate("WorkingFlow", "-"))
         self.wf_homepage.setText(_translate("WorkingFlow", "首页"))
         self.wf_prepage.setText(_translate("WorkingFlow", "←"))
         self.wf_pageShow.setText(_translate("WorkingFlow", "1/1"))
+        self.wf_nextpage.setToolTip(_translate("WorkingFlow", "下一页"))
         self.wf_nextpage.setText(_translate("WorkingFlow", "→"))
         self.wf_lastpage.setText(_translate("WorkingFlow", "尾页"))
+        self.wf_insertpage.setToolTip(_translate("WorkingFlow", "插入新的页"))
+        self.wf_insertpage.setText(_translate("WorkingFlow", "+"))

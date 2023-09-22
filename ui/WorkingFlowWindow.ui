@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>517</width>
+    <width>545</width>
     <height>556</height>
    </rect>
   </property>
@@ -53,6 +53,11 @@ QTableWidget {
 /* table:表头 */
 QHeaderView::section {
 	background-color: #272822;
+}
+/* tooltip:提示 */
+QToolTip {
+	color: #546E7A;
+	fonte: 18px &quot;SimHei&quot;;
 }
 /* 按钮 */
 QPushButton {
@@ -292,6 +297,28 @@ QPushButton:checked {
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
+      <widget class="QPushButton" name="wf_delpage">
+       <property name="minimumSize">
+        <size>
+         <width>36</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>36</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>删除当前页</string>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -308,13 +335,13 @@ QPushButton:checked {
       <widget class="QPushButton" name="wf_homepage">
        <property name="minimumSize">
         <size>
-         <width>75</width>
+         <width>65</width>
          <height>36</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>75</width>
+         <width>65</width>
          <height>36</height>
         </size>
        </property>
@@ -327,13 +354,13 @@ QPushButton:checked {
       <widget class="QPushButton" name="wf_prepage">
        <property name="minimumSize">
         <size>
-         <width>75</width>
+         <width>65</width>
          <height>36</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>75</width>
+         <width>65</width>
          <height>36</height>
         </size>
        </property>
@@ -371,15 +398,18 @@ QPushButton:checked {
       <widget class="QPushButton" name="wf_nextpage">
        <property name="minimumSize">
         <size>
-         <width>75</width>
+         <width>65</width>
          <height>36</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>75</width>
+         <width>65</width>
          <height>36</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string extracomment="下一页">下一页</string>
        </property>
        <property name="text">
         <string>→</string>
@@ -390,13 +420,13 @@ QPushButton:checked {
       <widget class="QPushButton" name="wf_lastpage">
        <property name="minimumSize">
         <size>
-         <width>75</width>
+         <width>65</width>
          <height>36</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>75</width>
+         <width>65</width>
          <height>36</height>
         </size>
        </property>
@@ -417,6 +447,28 @@ QPushButton:checked {
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="wf_insertpage">
+       <property name="minimumSize">
+        <size>
+         <width>36</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>36</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>插入新的页</string>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

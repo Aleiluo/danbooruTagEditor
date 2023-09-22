@@ -234,10 +234,6 @@ class fileManager:
     # -------------------
 
     def selectFolder(self):
-        # 先关闭所有窗口
-        self.workingflow_window.close()
-        self.filter_window.close()
-
         # 选择文件夹一定会弹窗询问
         if self.SaveConfirm_3opt(title='保存确认', msg='确认保存？') == False:
             return
