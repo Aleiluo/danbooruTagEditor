@@ -292,6 +292,8 @@ class userEvents:
             # 选择第一个没有隐藏的内容
             if self.ui.tagTable.rowCount() > 0:
                 select_first_visible_row(self.ui.tagTable)
+            # 工作流转到第一页
+            self.wf_SwitchPage(0)
 
     def prevImage(self):
         total_rows = self.ui.imageTable.rowCount()
