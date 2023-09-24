@@ -11,11 +11,7 @@ from scripts.tag_filter import Filters
 from scripts.working_flow import workingFlow
 from scripts.tag_completer import TagCompleter
 
-# TODO：工作流窗口添加空行要等待用户更改标签后再排序
-# TODO：工作流添加右键删除标签列表内标签功能
 # TODO：添加主界面工作进度保存功能
-# BUG：工作流窗口打开时切换图片导致滑动条正常解锁
-# BUG：工作流窗口打开时在主界面编辑中断问题
 
 
 class LoadMainWindow(QMainWindow):

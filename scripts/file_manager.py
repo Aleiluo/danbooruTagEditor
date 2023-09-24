@@ -1,5 +1,6 @@
 import os
 import re
+import json
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -11,6 +12,9 @@ class fileManager:
 
     def __init__(self):
         super().__init__()
+        # 已经处理的图片数
+        self.full_working_state = {}
+        self.processed_images = 0
         self.tagcount = 0
         self.entagChanged = False
         self.curImage_path = ""
@@ -98,6 +102,28 @@ class fileManager:
     # 变量与文件的读写
     #
     # -------------------
+
+    def loadWorkingState(self):
+        # 读取文件中的工作流
+        try:
+            with open('./cache/WorkingState.txt', 'r') as f:
+                self.full_working_state = json.load(f)
+
+            working_state = self.full_working_state[self.folder_path]
+            self.processed_images = working_state['processed_images']
+        except:
+            pass
+
+    def saveWorkingState(self):
+        # 将工作流信息写入到信息字典
+        self.full_working_state[self.folder_path] = {
+            'processed_images': self.processed_images,
+        }
+        # 保存到文件
+        if not os.path.exists('./cache'):
+            os.makedirs('./cache')
+        with open('./cache/WorkingState.txt', 'w') as f:
+            json.dump(self.full_working_state, f)
 
     def setImageTable(self, row, pixmap):
         pixmap_label = QLabel()
@@ -247,12 +273,18 @@ class fileManager:
             self.folder_path = folder_dialog.selectedFiles()[0]
             # 加载图片
             self.loadImagesfromFile()
+            # 清空标签列表
+            self.ui.tagTable.clearContents()
+            self.ui.tagTable.setRowCount(0)
             # 关闭预览图
             if self.imageShowed == True:
                 self.switch_image_preview()
 
             # 保存功能
             self.ui.saveFile.setEnabled(True)
+            # 读取工作状态
+            self.loadWorkingState()
+            self.ui.imageTable.setCurrentCell(self.processed_images, 0)
             # 过滤器
             self.filter_loadFile()
             self.ui.openFilter.setEnabled(True)

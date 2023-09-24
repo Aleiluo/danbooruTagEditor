@@ -188,8 +188,17 @@ class userEvents:
 
         elif event.type() == QEvent.ContextMenu:
             # 在mainWindow中右键对应的事件是QEvent.ContextMenu
-            self.delCopylistRow()
-            return True
+            if source == self:
+                self.delCopylistRow()
+                return True
+            elif source == self.workingflow_window:
+                en_item = self.wf_curEnItem()
+                if en_item:
+                    del_text = en_item.text().strip()
+                    row = textRepeatRows(self, del_text)
+                    if len(row) > 0:
+                        self.delTagtableRow([self.ui.tagTable.item(row[0], 0)])
+
         elif event.type() == QMouseEvent.HoverMove and source == self:
             # 判断鼠标是否在左侧区域内
             if self.imageShowed == True:
@@ -211,20 +220,12 @@ class userEvents:
                     self.preview_image.setAttribute(
                         Qt.WA_TransparentForMouseEvents, False)
                     return True
-        elif event.type() == QEvent.Leave:
-            if source == self:
-                self.wf_setOnTop(False)
-        elif event.type() == QEvent.Enter:
-            if source == self:
-                self.wf_setOnTop(True)
+        elif event.type() == QEvent.KeyRelease:
+            if event.key() == Qt.Key_Alt:
+                for scrollArea in self.findChildren(QScrollBar):
+                    scrollArea.setEnabled(True)
 
         return False
-
-    def keyReleaseEvent(self, event):
-        if event.key() == Qt.Key_Alt:
-            # 释放Alt解锁滑动条
-            for scrollArea in self.findChildren(QScrollBar):
-                scrollArea.setEnabled(True)
 
     def resizeEvent(self, event):
         # 调整表头
@@ -281,6 +282,9 @@ class userEvents:
             text_item = self.ui.imageTable.item(self.imageTableRow, 1)
             self.curImage = text_item.text()
             self.loadTags2Table()
+            # 保存工作进度
+            self.processed_images = self.imageTableRow
+            self.saveWorkingState()
             # 如果预览图正在显示，那么切换预览图为当前图片
             if self.imageShowed == True:
                 self.switch_image_preview()
@@ -443,14 +447,18 @@ class userEvents:
         if len(repeat_rows) == 0:
             self.blockItemchangedConnect = True
             # 添加一行
+            row = self.cur_item.row()
             self.ui.tagTable.clearSelection()  # 取消所有选中
-            self.ui.tagTable.insertRow(0)
+            self.ui.tagTable.insertRow(row)
             # 插入的一行有文本
             item = QTableWidgetItem(text)
             item.index = getTagCount(self)
-            self.ui.tagTable.setItem(0, 0, item)
-            self.ui.tagTable.setCurrentCell(0, 0)
-            refreshTagtable(self, item)
+            self.ui.tagTable.setItem(row, 0, item)
+            self.ui.tagTable.setCurrentCell(row, 0)
+
+            if text != '<NewRow>':
+                # 添加新行不要立刻排序
+                refreshTagtable(self, item)
 
             # 设置为需要保存
             self.setneedSave()

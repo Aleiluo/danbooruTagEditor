@@ -116,20 +116,6 @@ class workingFlow:
             # 实时染色
             self.ui.tagTable.itemChanged.connect(self.wf_FontReset)
 
-    def wf_setOnTop(self, onTop_flag):
-        if not self.workingflow_window.isVisible():
-            return
-        # 通过窗口名称获得窗口句柄
-        self.wf_handle = win32gui.FindWindow(None, '工作流')
-        if onTop_flag:
-            # 设为置顶
-            win32gui.SetWindowPos(self.wf_handle, win32con.HWND_TOPMOST,
-                                  0, 0, 0, 0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
-        else:
-            # 取消置顶
-            win32gui.SetWindowPos(self.wf_handle, win32con.HWND_NOTOPMOST,
-                                  0, 0, 0, 0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
-
     # -------------------
     #
     # 数据在文件与变量之间的存取
@@ -271,7 +257,7 @@ class workingFlow:
         if len(cur_items) == 1:
             # 如果只选择了一个，就在后面新建一行
             item = cur_items[0]
-            row = item.row() + 1
+            row = item.row()
         else:
             # 否则在尾部新建一行
             row = self.workingflow_window.ui.wf_table.rowCount()
@@ -394,15 +380,20 @@ class workingFlow:
             self.wf_cur_page = self.wf_cur_page - 1
             self.wf_SwitchPage(page - 1)
 
-
+    def wf_curEnItem(self):
+        cur_items = self.workingflow_window.ui.wf_table.selectedItems()
+        if len(cur_items) > 0:
+            row = cur_items[0].row()
+            en_item = self.workingflow_window.ui.wf_table.item(row, 0)
+            return en_item
+        else:
+            return False
 
     def wf_EnterPressed(self):
         if self.workingflow_window.ui.wf_workmode.isChecked():
-            # 工作模式
-            cur_items = self.workingflow_window.ui.wf_table.selectedItems()
-            if len(cur_items) > 0:
-                cur_item = cur_items[0]
-                self.wf_copy2tagTable(cur_item.row(), cur_item.column())
+            en_item = self.wf_curEnItem()
+            if en_item:
+                self.wf_copy2tagTable(en_item.row(), en_item.column())
         else:
             # 编辑模式
             self.workingflow_window.ui.wf_table.editItem(
