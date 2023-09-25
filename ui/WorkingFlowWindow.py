@@ -223,6 +223,8 @@ class Ui_WorkingFlow(object):
         item = QtWidgets.QTableWidgetItem()
         self.wf_table.setHorizontalHeaderItem(1, item)
         self.wf_table.horizontalHeader().setCascadingSectionResizes(True)
+        self.wf_table.horizontalHeader().setDefaultSectionSize(200)
+        self.wf_table.horizontalHeader().setMinimumSectionSize(50)
         self.wf_table.horizontalHeader().setSortIndicatorShown(True)
         self.wf_table.horizontalHeader().setStretchLastSection(True)
         self.wf_table.verticalHeader().setVisible(False)

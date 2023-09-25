@@ -44,8 +44,9 @@ def refreshTagtable(self, item, old_text=''):
                                                      Qt.MatchExactly)
             if len(found_items) > 0:
                 found_item = found_items[0]
-                self.ui.tagTable.setCurrentCell(found_item.row(), 0)
-
+                found_item_row = found_item.row()
+                self.ui.tagTable.setCurrentCell(found_item_row, 0)
+                self.ui.tagTable.scrollToItem(self.ui.tagTable.item(found_item_row, 0))
             return True
 
     elif item_column == 1:
@@ -296,8 +297,7 @@ class userEvents:
             # 选择第一个没有隐藏的内容
             if self.ui.tagTable.rowCount() > 0:
                 select_first_visible_row(self.ui.tagTable)
-            # 工作流转到第一页
-            self.wf_SwitchPage(0)
+
 
     def prevImage(self):
         total_rows = self.ui.imageTable.rowCount()
@@ -446,8 +446,12 @@ class userEvents:
         repeat_rows = textRepeatRows(self, text)
         if len(repeat_rows) == 0:
             self.blockItemchangedConnect = True
+            if text != '<NewRow>':
+                row = 0
+            else:
+                row = self.cur_item.row()
+
             # 添加一行
-            row = self.cur_item.row()
             self.ui.tagTable.clearSelection()  # 取消所有选中
             self.ui.tagTable.insertRow(row)
             # 插入的一行有文本

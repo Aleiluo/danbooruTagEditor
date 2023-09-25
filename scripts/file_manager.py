@@ -284,7 +284,8 @@ class fileManager:
             self.ui.saveFile.setEnabled(True)
             # 读取工作状态
             self.loadWorkingState()
-            self.ui.imageTable.setCurrentCell(self.processed_images, 0)
+            self.ui.imageTable.setCurrentCell(self.processed_images, 1)
+            self.ui.imageTable.scrollToItem(self.ui.imageTable.item(self.processed_images, 1))
             # 过滤器
             self.filter_loadFile()
             self.ui.openFilter.setEnabled(True)

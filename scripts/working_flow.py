@@ -31,7 +31,6 @@ class workingFlow:
         QShortcut(QKeySequence(Qt.Key_Right), self.workingflow_window) \
             .activated.connect(lambda: self.wf_SwitchPage(self.wf_cur_page + 1))
 
-
         # 与主窗口相连接的快捷键
 
         # Ctrl + S：保存
@@ -218,27 +217,29 @@ class workingFlow:
             for row in range(self.workingflow_window.ui.wf_table.rowCount()):
                 cur_item1 = self.workingflow_window.ui.wf_table.item(row, 0)
                 cur_item2 = self.workingflow_window.ui.wf_table.item(row, 1)
-                font = cur_item1.font()
-                if tagTable_exist.get(cur_item1.text().strip(), -1) == 1:
-                    # 使用删除线与斜体
-                    font.setStrikeOut(True)
-                    font.setItalic(True)
-                else:
-                    font.setStrikeOut(False)
-                    font.setItalic(False)
+                if cur_item1 and cur_item2:
+                    font = cur_item1.font()
+                    if tagTable_exist.get(cur_item1.text().strip(), -1) == 1:
+                        # 使用删除线与斜体
+                        font.setStrikeOut(True)
+                        font.setItalic(True)
+                    else:
+                        font.setStrikeOut(False)
+                        font.setItalic(False)
 
-                cur_item1.setFont(font)
-                cur_item2.setFont(font)
+                    cur_item1.setFont(font)
+                    cur_item2.setFont(font)
         else:
             # 编辑模式：不使用删除线
             for row in range(self.workingflow_window.ui.wf_table.rowCount()):
                 cur_item1 = self.workingflow_window.ui.wf_table.item(row, 0)
                 cur_item2 = self.workingflow_window.ui.wf_table.item(row, 1)
-                font = cur_item1.font()
-                font.setStrikeOut(False)
-                font.setItalic(False)
-                cur_item1.setFont(font)
-                cur_item2.setFont(font)
+                if cur_item1 and cur_item2:
+                    font = cur_item1.font()
+                    font.setStrikeOut(False)
+                    font.setItalic(False)
+                    cur_item1.setFont(font)
+                    cur_item2.setFont(font)
 
     # -------------------
     #
@@ -257,7 +258,7 @@ class workingFlow:
         if len(cur_items) == 1:
             # 如果只选择了一个，就在后面新建一行
             item = cur_items[0]
-            row = item.row()
+            row = item.row() + 1
         else:
             # 否则在尾部新建一行
             row = self.workingflow_window.ui.wf_table.rowCount()
