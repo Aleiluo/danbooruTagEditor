@@ -557,9 +557,11 @@ class userEvents:
 
     def delCopylistRow(self):
         if self.ui.copyList.hasFocus():
-            item = self.ui.copyList.selectedItems()[0]
-            row = self.ui.copyList.row(item)
-            self.ui.copyList.takeItem(row)
+            items = self.ui.copyList.selectedItems()
+            if len(items) > 0:
+                item = items[0]
+                row = self.ui.copyList.row(item)
+                self.ui.copyList.takeItem(row)
 
 
 # -----------------

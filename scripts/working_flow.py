@@ -217,7 +217,7 @@ class workingFlow:
             for row in range(self.workingflow_window.ui.wf_table.rowCount()):
                 cur_item1 = self.workingflow_window.ui.wf_table.item(row, 0)
                 cur_item2 = self.workingflow_window.ui.wf_table.item(row, 1)
-                if cur_item1 and cur_item2:
+                try:
                     font = cur_item1.font()
                     if tagTable_exist.get(cur_item1.text().strip(), -1) == 1:
                         # 使用删除线与斜体
@@ -229,17 +229,21 @@ class workingFlow:
 
                     cur_item1.setFont(font)
                     cur_item2.setFont(font)
+                except:
+                    pass
         else:
             # 编辑模式：不使用删除线
             for row in range(self.workingflow_window.ui.wf_table.rowCount()):
                 cur_item1 = self.workingflow_window.ui.wf_table.item(row, 0)
                 cur_item2 = self.workingflow_window.ui.wf_table.item(row, 1)
-                if cur_item1 and cur_item2:
+                try:
                     font = cur_item1.font()
                     font.setStrikeOut(False)
                     font.setItalic(False)
                     cur_item1.setFont(font)
                     cur_item2.setFont(font)
+                except:
+                    pass
 
     # -------------------
     #

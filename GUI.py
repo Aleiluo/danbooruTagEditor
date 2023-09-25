@@ -11,7 +11,8 @@ from scripts.tag_filter import Filters
 from scripts.working_flow import workingFlow
 from scripts.tag_completer import TagCompleter
 
-# TODO：添加主界面工作进度保存功能
+# TODO：工作模式下禁止增删页
+# TODO：添加SFW功能
 
 
 class LoadMainWindow(QMainWindow):
