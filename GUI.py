@@ -11,9 +11,10 @@ from scripts.tag_filter import Filters
 from scripts.working_flow import workingFlow
 from scripts.tag_completer import TagCompleter
 
-# TODO：工作模式下禁止增删页
-# TODO：添加SFW功能
-
+# TODO：保存工作状态逻辑变更为：图片标签保存后，而不是切换图片
+# TODO：批量增删功能
+# TODO：增加括号是否使用转义符号'\('或'\)'
+# TODO：移除无用的复制粘贴列表，换做过滤器和批量增删
 
 class LoadMainWindow(QMainWindow):
     def __init__(self):

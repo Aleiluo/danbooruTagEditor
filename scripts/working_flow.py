@@ -17,6 +17,8 @@ class workingFlow:
         self.workingflow_window = QWidget()
         self.workingflow_window.ui = Ui_WorkingFlow()
         self.workingflow_window.ui.setupUi(self.workingflow_window)
+        self.workingflow_window.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+
         # 添加热键
         # Ctrl + N：添加行
         QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_N), self.workingflow_window) \
@@ -428,6 +430,9 @@ class workingFlow:
             self.wf_blockDeleteRow = False
             # 重载当前页刷新上色状态
             self.wf_FontReset()
+            # 启用加页、删页功能
+            self.workingflow_window.ui.wf_delpage.setEnabled(True)
+            self.workingflow_window.ui.wf_insertpage.setEnabled(True)
 
         else:
             # 工作模式：不允许更改，点击复制，一次仅能选择一行
@@ -443,6 +448,9 @@ class workingFlow:
             self.wf_blockDeleteRow = True
             # 重载当前页刷新上色状态
             self.wf_FontReset()
+            # 禁用加页、删页功能
+            self.workingflow_window.ui.wf_delpage.setEnabled(False)
+            self.workingflow_window.ui.wf_insertpage.setEnabled(False)
 
         # 工作模式保存
         self.wf_saveFile()
