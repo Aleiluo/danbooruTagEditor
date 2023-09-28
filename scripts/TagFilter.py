@@ -8,7 +8,7 @@ from PyQt5.QtCore import *
 from ui.FilterWindow import Ui_Filter
 
 
-class Filters:
+class TagFilter:
     def __init__(self):
         super().__init__()
         # 载入子窗口

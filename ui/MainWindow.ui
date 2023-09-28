@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>886</width>
+    <width>972</width>
     <height>677</height>
    </rect>
   </property>
@@ -48,6 +48,9 @@ QTableWidget::item {
 }
 /* table:表头 */
 QHeaderView::section {
+	background-color: #272822;
+}
+QTableCornerButton::section {
 	background-color: #272822;
 }
 /* 按钮 */
@@ -135,7 +138,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,4,2">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,4">
       <item>
        <widget class="QTableWidget" name="imageTable">
         <property name="editTriggers">
@@ -160,7 +163,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
          <bool>true</bool>
         </attribute>
         <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
+         <bool>true</bool>
         </attribute>
         <attribute name="verticalHeaderMinimumSectionSize">
          <number>150</number>
@@ -195,7 +198,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
          <number>10</number>
         </attribute>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>10</number>
+         <number>300</number>
         </attribute>
         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
          <bool>true</bool>
@@ -221,9 +224,6 @@ QScrollBar::add-page, QScrollBar::sub-page {
         </column>
        </widget>
       </item>
-      <item>
-       <widget class="QListWidget" name="copyList"/>
-      </item>
      </layout>
     </item>
    </layout>
@@ -233,7 +233,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>886</width>
+     <width>972</width>
      <height>31</height>
     </rect>
    </property>

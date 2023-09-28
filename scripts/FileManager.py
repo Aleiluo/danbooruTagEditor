@@ -7,14 +7,14 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
-class fileManager:
+class FileManager:
     image_loaded = pyqtSignal(int, QPixmap)
 
     def __init__(self):
         super().__init__()
         # 已经处理的图片数
         self.full_working_state = {}
-        self.processed_images = 0
+        self.imageTableRow = 0
         self.tagcount = 0
         self.entagChanged = False
         self.curImage_path = ""
@@ -110,14 +110,14 @@ class fileManager:
                 self.full_working_state = json.load(f)
 
             working_state = self.full_working_state[self.folder_path]
-            self.processed_images = working_state['processed_images']
+            self.imageTableRow = working_state['imageTableRow']
         except:
             pass
 
     def saveWorkingState(self):
         # 将工作流信息写入到信息字典
         self.full_working_state[self.folder_path] = {
-            'processed_images': self.processed_images,
+            'imageTableRow': self.imageTableRow,
         }
         # 保存到文件
         if not os.path.exists('./cache'):
@@ -181,6 +181,8 @@ class fileManager:
 
     # 标签表格
     def saveTags2File(self):
+        # 保存工作状态
+        self.saveWorkingState()
         tags = self.getTagsfromTable()
         # 保存标签到文件
         with open(self.curTag_path, "w") as file:
@@ -284,8 +286,8 @@ class fileManager:
             self.ui.saveFile.setEnabled(True)
             # 读取工作状态
             self.loadWorkingState()
-            self.ui.imageTable.setCurrentCell(self.processed_images, 1)
-            self.ui.imageTable.scrollToItem(self.ui.imageTable.item(self.processed_images, 1))
+            self.ui.imageTable.setCurrentCell(self.imageTableRow, 1)
+            self.ui.imageTable.scrollToItem(self.ui.imageTable.item(self.imageTableRow, 1))
             # 过滤器
             self.filter_loadFile()
             self.ui.openFilter.setEnabled(True)

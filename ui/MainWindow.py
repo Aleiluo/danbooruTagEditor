@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
-        mainWindow.resize(886, 677)
+        mainWindow.resize(972, 677)
         mainWindow.setStyleSheet("* {\n"
 "    font-family:\"KaiTi\";\n"
 "    font-size:28px;\n"
@@ -49,6 +49,9 @@ class Ui_mainWindow(object):
 "}\n"
 "/* table:表头 */\n"
 "QHeaderView::section {\n"
+"    background-color: #272822;\n"
+"}\n"
+"QTableCornerButton::section {\n"
 "    background-color: #272822;\n"
 "}\n"
 "/* 按钮 */\n"
@@ -153,7 +156,7 @@ class Ui_mainWindow(object):
         self.imageTable.horizontalHeader().setDefaultSectionSize(150)
         self.imageTable.horizontalHeader().setMinimumSectionSize(50)
         self.imageTable.horizontalHeader().setStretchLastSection(True)
-        self.imageTable.verticalHeader().setVisible(False)
+        self.imageTable.verticalHeader().setVisible(True)
         self.imageTable.verticalHeader().setDefaultSectionSize(150)
         self.imageTable.verticalHeader().setHighlightSections(False)
         self.imageTable.verticalHeader().setMinimumSectionSize(150)
@@ -168,23 +171,19 @@ class Ui_mainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.tagTable.setHorizontalHeaderItem(1, item)
         self.tagTable.horizontalHeader().setCascadingSectionResizes(True)
-        self.tagTable.horizontalHeader().setDefaultSectionSize(10)
+        self.tagTable.horizontalHeader().setDefaultSectionSize(300)
         self.tagTable.horizontalHeader().setMinimumSectionSize(10)
         self.tagTable.horizontalHeader().setSortIndicatorShown(True)
         self.tagTable.horizontalHeader().setStretchLastSection(True)
         self.tagTable.verticalHeader().setVisible(False)
         self.tagTable.verticalHeader().setHighlightSections(False)
         self.horizontalLayout.addWidget(self.tagTable)
-        self.copyList = QtWidgets.QListWidget(self.centralwidget)
-        self.copyList.setObjectName("copyList")
-        self.horizontalLayout.addWidget(self.copyList)
         self.horizontalLayout.setStretch(0, 3)
         self.horizontalLayout.setStretch(1, 4)
-        self.horizontalLayout.setStretch(2, 2)
         self.verticalLayout.addLayout(self.horizontalLayout)
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 886, 31))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 972, 31))
         self.menubar.setObjectName("menubar")
         self.File = QtWidgets.QMenu(self.menubar)
         self.File.setFocusPolicy(QtCore.Qt.NoFocus)

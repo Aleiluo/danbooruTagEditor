@@ -66,13 +66,11 @@ def refreshTagtable(self, item, old_text=''):
             return False
 
 
-class userEvents:
+class UserEvents:
     def __init__(self):
         super().__init__()
         # 加载剪贴板
         self.clipboard = QApplication.clipboard()
-        # 图片表格选中的行
-        self.imageTableRow = 0
         # 当前选中图片
         self.curImage = None
         # 预览图是否正在显示
@@ -80,7 +78,7 @@ class userEvents:
         # 是否阻断物件修改触发事件
         self.blockItemchangedConnect = False
         # 图片显示相关
-        self.left_region = QRegion(0, 0, self.width() * 0.333, self.height())
+        self.left_region = QRegion(0, 0, self.width() * 3 / 7, self.height())
         self.mouseinLeftRegion = False
         # 单击时记录tag信息方便撤销操作
         self.cur_items = None
@@ -140,9 +138,6 @@ class userEvents:
         self.ui.tagTable.itemChanged.connect(self.editmode)
         # 标签列表：激活物件事件--获取当前物件文本
         self.ui.tagTable.itemSelectionChanged.connect(self.delayed_getCurtext)
-        # 拷贝列表左键单击事件
-        self.ui.copyList.itemClicked.connect(self.copy2Tagtable)
-        # **拷贝列表右击删除功能的定义在全局事件过滤器中**
 
     def tagtableUndo(self):
         self.undoStack.undo()
@@ -189,10 +184,7 @@ class userEvents:
 
         elif event.type() == QEvent.ContextMenu:
             # 在mainWindow中右键对应的事件是QEvent.ContextMenu
-            if source == self:
-                self.delCopylistRow()
-                return True
-            elif source == self.workingflow_window:
+            if source == self.workingflow_window:
                 en_item = self.wf_curEnItem()
                 if en_item:
                     del_text = en_item.text().strip()
@@ -229,10 +221,8 @@ class userEvents:
         return False
 
     def resizeEvent(self, event):
-        # 调整表头
-        self.setEqualColumnWidth()
         # 窗口大小改变时更新左侧区域
-        self.left_region = QRegion(0, 0, self.width() * 0.333, self.height())
+        self.left_region = QRegion(0, 0, self.width() * 3 / 7, self.height())
         if self.imageShowed == True:
             self.switch_image_preview()
             QTimer.singleShot(300, self.switch_image_preview)
@@ -283,9 +273,6 @@ class userEvents:
             text_item = self.ui.imageTable.item(self.imageTableRow, 1)
             self.curImage = text_item.text()
             self.loadTags2Table()
-            # 保存工作进度
-            self.processed_images = self.imageTableRow
-            self.saveWorkingState()
             # 如果预览图正在显示，那么切换预览图为当前图片
             if self.imageShowed == True:
                 self.switch_image_preview()
@@ -336,7 +323,7 @@ class userEvents:
                 pixmap = QPixmap(image_path)
 
                 self.preview_image = QLabel(self)
-                self.preview_image.resize(self.width() * 0.333, self.height())
+                self.preview_image.resize(self.width() * 3 / 7, self.height())
 
                 # 设置标签背景颜色为透明色
                 self.preview_image.setStyleSheet(
@@ -415,7 +402,6 @@ class userEvents:
         item.setText(new_text)
         # 添加到快捷拷贝列表(更改英文标签才添加，更改翻译不添加)
         if item.column() == 0:
-            self.addCopylist(new_text)
             if refreshTagtable(self, item, old_text) == True:
                 # 设置为需要保存
                 self.setneedSave()
@@ -470,8 +456,6 @@ class userEvents:
             command = AddRowCommand(self, item.index, text)
             # 添加撤销命令到撤销栈
             self.undoStack.push(command)
-            # 添加到快捷拷贝列表
-            self.addCopylist(text)
 
             self.blockItemchangedConnect = False
         else:
@@ -529,40 +513,6 @@ class userEvents:
         elif sort_mode == 2:
             # 排序
             change_index(self, self.sort_const)
-
-    # -------------------
-    #
-    # 快捷拷贝列表copyList
-    #
-    # -------------------
-
-    def copy2Tagtable(self):
-        # 将copyList选中的文本拷贝到tagTable
-        selected_items = self.ui.copyList.selectedItems()
-        self.addRow(selected_items[0].text().strip())
-
-    def addCopylist(self, text):
-        # 不添加空格
-        text = text.strip()
-        if text == '' or text == '<NewRow>':
-            return
-        # 检查文本是否已经存在于 copyList 中
-        for i in range(self.ui.copyList.count()):
-            if self.ui.copyList.item(i).text() == text:
-                return
-        # 添加文本到 copyList 中
-        self.ui.copyList.addItem(QListWidgetItem(text))
-        # 对 copyList 进行排序
-        self.ui.copyList.sortItems()
-
-    def delCopylistRow(self):
-        if self.ui.copyList.hasFocus():
-            items = self.ui.copyList.selectedItems()
-            if len(items) > 0:
-                item = items[0]
-                row = self.ui.copyList.row(item)
-                self.ui.copyList.takeItem(row)
-
 
 # -----------------
 #

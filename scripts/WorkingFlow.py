@@ -10,7 +10,7 @@ from PyQt5.QtCore import *
 from ui.WorkingFlowWindow import Ui_WorkingFlow
 
 
-class workingFlow:
+class WorkingFlow:
     def __init__(self):
         super().__init__()
         # 载入子窗口

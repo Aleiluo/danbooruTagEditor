@@ -1,7 +1,7 @@
 import csv
 
 
-class tagTran:
+class TagTran:
     def __init__(self):
         super().__init__()
         self.inf_post_count = 1145141919810
