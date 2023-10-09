@@ -1,7 +1,5 @@
 import json
 import os
-import win32gui
-import win32con
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *

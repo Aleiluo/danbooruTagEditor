@@ -78,7 +78,7 @@ class UserEvents:
         # 是否阻断物件修改触发事件
         self.blockItemchangedConnect = False
         # 图片显示相关
-        self.left_region = QRegion(0, 0, self.width() * 3 / 7, self.height())
+        self.left_region = QRegion(0, 0, int(self.width() * 3 / 7), self.height())
         self.mouseinLeftRegion = False
         # 单击时记录tag信息方便撤销操作
         self.cur_items = None
@@ -222,7 +222,7 @@ class UserEvents:
 
     def resizeEvent(self, event):
         # 窗口大小改变时更新左侧区域
-        self.left_region = QRegion(0, 0, self.width() * 3 / 7, self.height())
+        self.left_region = QRegion(0, 0, int(self.width() * 3 / 7), self.height())
         if self.imageShowed == True:
             self.switch_image_preview()
             QTimer.singleShot(300, self.switch_image_preview)
@@ -323,7 +323,7 @@ class UserEvents:
                 pixmap = QPixmap(image_path)
 
                 self.preview_image = QLabel(self)
-                self.preview_image.resize(self.width() * 3 / 7, self.height())
+                self.preview_image.resize(int(self.width() * 3 / 7), self.height())
 
                 # 设置标签背景颜色为透明色
                 self.preview_image.setStyleSheet(
