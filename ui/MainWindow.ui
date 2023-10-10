@@ -256,7 +256,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
     </property>
     <addaction name="openFilter"/>
     <addaction name="openWorkingFlow"/>
-    <addaction name="batchOperation"/>
+    <addaction name="openBatchOperation"/>
    </widget>
    <widget class="QMenu" name="Settings">
     <property name="title">
@@ -431,7 +431,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
     <string>按照字母排序</string>
    </property>
   </action>
-  <action name="batchOperation">
+  <action name="openBatchOperation">
    <property name="enabled">
     <bool>false</bool>
    </property>

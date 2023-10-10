@@ -1,6 +1,9 @@
+import json
 import os
 import re
-import json
+import shutil
+
+from datetime import datetime
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -257,7 +260,7 @@ class FileManager:
 
     # -------------------
     #
-    # 其他函数
+    # 选择文件夹
     #
     # -------------------
 
@@ -297,6 +300,32 @@ class FileManager:
             # 工作流
             self.wf_loadFile()
             self.ui.openWorkingFlow.setEnabled(True)
+            # 批量处理
+            self.ui.openBatchOperation.setEnabled(True)
+
+    # -------------------
+    #
+    # 备份标签
+    #
+    # -------------------
+
+    def backupTags(self):
+        # 对于批处理操作写撤销重做比较麻烦，索性直接备份所有标签文件
+
+        # 获取最后一级文件目录
+        base_name = os.path.basename(os.path.normpath(self.folder_path))
+        # 获取时间
+        current_time = datetime.now().strftime("%m-%d-%H-%M-%S")
+        # 生成备份路径
+        backup_path = os.path.join('./backup', base_name, current_time)
+        os.makedirs(backup_path, exist_ok=True)
+
+        # 拷贝标签文件到备份路径
+        for file_name in os.listdir(self.folder_path):
+            if file_name.endswith('.txt') and os.path.isfile(os.path.join(self.folder_path, file_name)):
+                shutil.copy(os.path.join(self.folder_path, file_name), backup_path)
+
+        self.ui.statusbar.showMessage(f"标签文件备份到{backup_path}", 2000)
 
 
 class ImageLoaderThread(QRunnable):

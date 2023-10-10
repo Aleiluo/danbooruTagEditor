@@ -14,6 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_BatchOperator(object):
     def setupUi(self, BatchOperator):
         BatchOperator.setObjectName("BatchOperator")
+        BatchOperator.setEnabled(True)
         BatchOperator.resize(485, 172)
         BatchOperator.setStyleSheet("* {\n"
 "    font-family:\"KaiTi\";\n"
@@ -51,11 +52,12 @@ class Ui_BatchOperator(object):
 "    color: #cccccc; /* 文本颜色 */\n"
 "    selection-background-color: #646765; /* 选中文本的背景颜色 */\n"
 "    selection-color: #cccccc; /* 选中文本的颜色 */\n"
+"}\n"
+"QLineEdit:disabled {\n"
+"    background-color: #292a28;\n"
+"    color: #292a28;\n"
+"}\n"
 "\n"
-"}\n"
-"QTableWidget::item {\n"
-"    \n"
-"}\n"
 "/* table:表头 */\n"
 "QHeaderView::section {\n"
 "    background-color: #272822;\n"
@@ -83,6 +85,24 @@ class Ui_BatchOperator(object):
 "QTabWidget::pane{\n"
 "    border:none;\n"
 "}\n"
+"/* ComboBox */\n"
+"QComboBox {\n"
+"    border: 1px solid #99947c;\n"
+"    background-color: #414339;    \n"
+"    color: #cccccc; \n"
+"    font-size:25px;\n"
+"    border-width:2px;/*边框宽度*/\n"
+"    padding-left: 5px;/*左侧边距*/\n"
+"}\n"
+"/*下拉框的样式*/\n"
+"QComboBox QAbstractItemView \n"
+"{\n"
+"    border: 1px solid #99947c;\n"
+"    background-color: #414339;   \n"
+"    selection-background-color: #75715E;   \n"
+"}\n"
+"\n"
+"\n"
 "/* 状态条 */\n"
 "QStatusBar {\n"
 "    background-color: #414339;\n"
@@ -146,36 +166,35 @@ class Ui_BatchOperator(object):
         self.ins_Label = QtWidgets.QLabel(BatchOperator)
         self.ins_Label.setObjectName("ins_Label")
         self.verticalLayout.addWidget(self.ins_Label)
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
-        self.frontMode = QtWidgets.QPushButton(BatchOperator)
-        self.frontMode.setObjectName("frontMode")
-        self.horizontalLayout.addWidget(self.frontMode)
-        self.behindMode = QtWidgets.QPushButton(BatchOperator)
-        self.behindMode.setObjectName("behindMode")
-        self.horizontalLayout.addWidget(self.behindMode)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
-        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.comboBox = QtWidgets.QComboBox(BatchOperator)
+        self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.verticalLayout.addWidget(self.comboBox)
         self.batchEdit = QtWidgets.QLineEdit(BatchOperator)
+        self.batchEdit.setEnabled(True)
         self.batchEdit.setText("")
         self.batchEdit.setObjectName("batchEdit")
         self.verticalLayout.addWidget(self.batchEdit)
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        spacerItem2 = QtWidgets.QSpacerItem(100, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem2)
-        self.batchAdd = QtWidgets.QPushButton(BatchOperator)
-        self.batchAdd.setObjectName("batchAdd")
-        self.horizontalLayout_2.addWidget(self.batchAdd)
-        self.batchDel = QtWidgets.QPushButton(BatchOperator)
-        self.batchDel.setObjectName("batchDel")
-        self.horizontalLayout_2.addWidget(self.batchDel)
-        spacerItem3 = QtWidgets.QSpacerItem(100, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem3)
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        spacerItem = QtWidgets.QSpacerItem(150, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
+        self.batchRun = QtWidgets.QPushButton(BatchOperator)
+        self.batchRun.setObjectName("batchRun")
+        self.horizontalLayout.addWidget(self.batchRun)
+        self.backup = QtWidgets.QCheckBox(BatchOperator)
+        self.backup.setChecked(True)
+        self.backup.setObjectName("backup")
+        self.horizontalLayout.addWidget(self.backup)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(BatchOperator)
         QtCore.QMetaObject.connectSlotsByName(BatchOperator)
@@ -183,8 +202,13 @@ class Ui_BatchOperator(object):
     def retranslateUi(self, BatchOperator):
         _translate = QtCore.QCoreApplication.translate
         BatchOperator.setWindowTitle(_translate("BatchOperator", "批量增删"))
-        self.ins_Label.setText(_translate("BatchOperator", "对过滤后的图像进行批量增删操作"))
-        self.frontMode.setText(_translate("BatchOperator", "前插"))
-        self.behindMode.setText(_translate("BatchOperator", "后插"))
-        self.batchAdd.setText(_translate("BatchOperator", "添加"))
-        self.batchDel.setText(_translate("BatchOperator", "删除"))
+        self.ins_Label.setText(_translate("BatchOperator", "对过滤后的图像进行批量操作"))
+        self.comboBox.setItemText(0, _translate("BatchOperator", "前插"))
+        self.comboBox.setItemText(1, _translate("BatchOperator", "后插"))
+        self.comboBox.setItemText(2, _translate("BatchOperator", "删除"))
+        self.comboBox.setItemText(3, _translate("BatchOperator", "\'(...)\' → \'/(.../)\'"))
+        self.comboBox.setItemText(4, _translate("BatchOperator", "\'/(.../)\' → \'(...)\'"))
+        self.comboBox.setItemText(5, _translate("BatchOperator", "空格 → 下划线"))
+        self.comboBox.setItemText(6, _translate("BatchOperator", "下划线 → 空格"))
+        self.batchRun.setText(_translate("BatchOperator", "执行"))
+        self.backup.setText(_translate("BatchOperator", "备份标签"))

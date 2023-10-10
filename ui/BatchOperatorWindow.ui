@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>BatchOperator</class>
  <widget class="QWidget" name="BatchOperator">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -50,11 +53,12 @@ QLineEdit {
 	color: #cccccc; /* 文本颜色 */
 	selection-background-color: #646765; /* 选中文本的背景颜色 */
 	selection-color: #cccccc; /* 选中文本的颜色 */
+}
+QLineEdit:disabled {
+	background-color: #292a28;
+	color: #292a28;
+}
 
-}
-QTableWidget::item {
-	
-}
 /* table:表头 */
 QHeaderView::section {
 	background-color: #272822;
@@ -84,46 +88,21 @@ QTabWidget::pane{
 }
 /* ComboBox */
 QComboBox {
-	border: 1px solid #99947c; /* 边框宽度为1px，颜色为#A0A0A0 */
-	background-color: #414339; /* 背景颜色 */
-	color: #cccccc; /* 文本颜色 */
+	border: 1px solid #99947c;
+	background-color: #414339;	
+	color: #cccccc; 
 	font-size:25px;
-
 	border-width:2px;/*边框宽度*/
-	padding-left: 10px;/*左侧边距*/
+	padding-left: 5px;/*左侧边距*/
+}
+/*下拉框的样式*/
+QComboBox QAbstractItemView 
+{
+    border: 1px solid #99947c;
+    background-color: #414339;   
+    selection-background-color: #75715E;   
 }
 
-
-/* 下拉后，整个下拉窗体样式 */
-QComboBox QAbstractItemView {
-    border: 2px solid #f3f3f3;/*边框宽度、线形、颜色*/
-	background-color: rgba(237, 242, 255, 1);/*背景颜色*/
-    border-radius: 15px;/*圆角*/
-    padding: 1px 2px 1px 2px;  /*针对于组合框中的文本内容*/
-    min-width: 9em;   /*# 组合框的最小宽度*/
-}
-
-/* 下拉后，整个下拉窗体每项的样式 */
-QComboBox QAbstractItemView::item {
-	border-radius: 15px;/*圆角*/
-    height: 30px;   /* 项的高度（设置pComboBox-&gt;setView(new QListView());后，该项才起作用） */
-	background-color: rgb(237, 242, 255);
-
-}
-
-/*以下部分不知为何不生效，有待调试*/
-/* 下拉后，整个下拉窗体越过每项的样式 */
-QComboBox QAbstractItemView::item:hover {
-    color: #FFFFF0;
-       /* 整个下拉窗体越过每项的背景色 */
-	background-color: rgb(98, 0, 255);
-}
-
-/* 下拉后，整个下拉窗体被选择的每项的样式 */
-QComboBox QAbstractItemView::item:selected {
-    color: #FFFFF0;
-	background-color: rgb(0, 85, 200);
-}
 
 /* 状态条 */
 QStatusBar {
@@ -211,27 +190,40 @@ QScrollBar::add-page, QScrollBar::sub-page {
      </item>
      <item>
       <property name="text">
-       <string>括号前添加转义符'/'</string>
+       <string>'(...)' → '/(.../)'</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>移除括号前转义符'/'</string>
+       <string>'/(.../)' → '(...)'</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>空格 → 下划线</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>下划线 → 空格</string>
       </property>
      </item>
     </widget>
    </item>
    <item>
     <widget class="QLineEdit" name="batchEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -254,7 +246,17 @@ QScrollBar::add-page, QScrollBar::sub-page {
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_2">
+      <widget class="QCheckBox" name="backup">
+       <property name="text">
+        <string>备份标签</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -263,7 +265,7 @@ QScrollBar::add-page, QScrollBar::sub-page {
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>150</width>
+         <width>20</width>
          <height>20</height>
         </size>
        </property>

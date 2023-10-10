@@ -119,6 +119,9 @@ class UserEvents:
         # Ctrl + W：打开工作流
         QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_W), self) \
             .activated.connect(self.open_WorkingFlow)
+        # Ctrl + B：打开批处理
+        QShortcut(QKeySequence(Qt.ControlModifier + Qt.Key_B), self) \
+            .activated.connect(self.open_BatchOperation)
         # Alt + S：打开预览图
         QShortcut(QKeySequence(Qt.AltModifier + Qt.Key_S), self) \
             .activated.connect(self.switch_image_preview)
@@ -228,24 +231,27 @@ class UserEvents:
             QTimer.singleShot(300, self.switch_image_preview)
 
     def closeEvent(self, event):
+        def closeAll(self):
+            # 关闭所有
+            self.close()
+            self.filter_window.close()
+            self.workingflow_window.close()
+            self.batch_operator.close()
+
+
         if self.entagChanged == True:
             reply = QMessageBox.question(
                 self, "保存确认", "Save?",
                 QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
             if reply == QMessageBox.Yes:
                 self.saveTags2File()  # 保存操作
-                self.close()  # 关闭窗口
-                self.filter_window.close()
-                self.workingflow_window.close()
+                closeAll(self)
             elif reply == QMessageBox.No:
-                self.close()  # 关闭窗口
-                self.filter_window.close()
+                closeAll(self)
             elif reply == QMessageBox.Cancel:
                 pass  # 取消关闭窗口
         else:
-            self.close()
-            self.filter_window.close()
-            self.workingflow_window.close()
+            closeAll(self)
 
     # -------------------
     #

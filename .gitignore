@@ -3,9 +3,5 @@ __pycache__
 .idea
 otherutil
 cache
-FilterWindow_ui.py
-MainWindow_ui.py
-WorkingFlowWindow_ui.py
-BatchOperatorWindow_ui.py
+backup
 test.py
-danbooru-cn.csv
