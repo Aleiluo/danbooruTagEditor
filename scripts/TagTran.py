@@ -7,7 +7,7 @@ def usingSpace_delSlash(tag):
     tag_delSlash = ''
     for i in range(tag_len):
         if (i < tag_len - 1
-                and tag_usingSpace[i] == '/'
+                and tag_usingSpace[i] == '\\'
                 and (tag_usingSpace[i + 1] == '(' or tag_usingSpace[i + 1] == ')')):
             continue
         else:

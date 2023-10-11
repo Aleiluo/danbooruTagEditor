@@ -28,10 +28,10 @@ def batch_addSlash(tags):
     for tag in tags:
         new_tag = ''
         for i in range(len(tag)):
-            if tag[i] == '(' and (i == 0 or tag[i - 1] != '/'):
-                new_tag += '/'
-            elif tag[i] == ')' and (i == 0 or tag[i - 1] != '/'):
-                new_tag += '/'
+            if tag[i] == '(' and (i == 0 or tag[i - 1] != '\\'):
+                new_tag += '\\'
+            elif tag[i] == ')' and (i == 0 or tag[i - 1] != '\\'):
+                new_tag += '\\'
             new_tag += tag[i]
         new_tags.append(new_tag)
     return new_tags
@@ -43,7 +43,7 @@ def batch_delSlash(tags):
         new_tag = ''
         tag_len = len(tag)
         for i in range(len(tag)):
-            if i < tag_len - 1 and tag[i] == '/' and (tag[i + 1] == '(' or tag[i + 1] == ')'):
+            if i < tag_len - 1 and tag[i] == '\\' and (tag[i + 1] == '(' or tag[i + 1] == ')'):
                 continue
             else:
                 new_tag += tag[i]
